@@ -1,0 +1,42 @@
+/*main_page_css*/
+#wrap {
+  margin-top: 30px;
+}
+
+.thumbnail {
+  margin: 0 10px 0 20px;
+  height: 180px;
+  width: 200px;
+}
+
+#photo {
+  height: 170px;
+}
+
+.f_name {
+  clear: both;
+  margin: 180px 170px 20px 100px;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.input-group > input.form-control {
+  width: 50%;
+}
+
+#basic-addon2 {
+  padding: 0 30px;
+
+}
+
+.bottom-row2 {
+  margin-top: 25px;
+}
+
+.bottom-line {
+  margin-left: 20px;
+}
+
+#main_page_save {
+  margin: 20px 0 0 110px;
+}

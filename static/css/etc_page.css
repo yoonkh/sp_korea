@@ -1,0 +1,28 @@
+/*etc_page.css*/
+
+#f_num {
+  margin-left: 50px;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 5px;
+}
+
+#etc_num {
+  position: relative;
+  right: -15px;
+  width: 100px;
+}
+
+ul.nav-pills > li > a {
+  position: relative;
+  right: -50px;
+  top: -25px;
+  padding: 5px 5px;
+  height: 17px;
+
+}
+
+.bottom_menu {
+  line-height: 1;
+  margin-top: 10px;
+}

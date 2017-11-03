@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../static/css/etc_page.css">
+  <link rel="stylesheet" href="../static/css/base.css">
+  <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+  <title>etc_page</title>
+</head>
+
+<body>
+  <div class="top-diary">
+    <button type="button" class="btn"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span></button>
+    <div class="top-container">운동일지</div>
+    <div class="page-header">
+      <h2><input type="date" id="now_date">
+      <script>
+      document.getElementById('now_date').valueAsDate = new Date();
+      </script>
+      </h2>
+    </div>
+  </div>
+  <div class="middle-tag">
+    <div class="btn-group" role="group" aria-label="...">
+      <button type="button" class="btn btn-default">#해시태그 등록하기</button>
+
+    </div>
+  </div>
+
+  <div class="middle_survey">
+    <div class="f_1" id="f_num">체중 :<input type="number" name="userid" autocomplete="off" placeholder="Kg" class="main_input" style='IME-MODE: disabled' id="etc_num">
+    </div>
+    <div class="f_2" id="f_num">체지방량 :<input type="number" name="userid" autocomplete="off" placeholder="Kg or %" class="main_input" style='IME-MODE: disabled' id="etc_num">
+    </div>
+    <div class="f_3" id="f_num">골격근량 :<input type="number" name="userid" autocomplete="off" placeholder="Kg" class="main_input" style='IME-MODE: disabled' id="etc_num">
+    </div>
+    <div class="bottom_menu">
+    <div class="f_4" id="f_num">흡연 :
+      <ul class="nav nav-pills">
+        <li role="presentation"><a href="#">0갑</a></li>
+        <li role="presentation"><a href="#">1/2갑</a></li>
+        <li role="presentation"><a href="#">1갑</a></li>
+        <li role="presentation"><a href="#">2갑이상</a></li>
+      </ul>
+    </div>
+
+    <div class="f_5" id="f_num">음주 :
+      <ul class="nav nav-pills">
+        <li role="presentation"><a href="#">0병</a></li>
+        <li role="presentation"><a href="#">1/2병</a></li>
+        <li role="presentation"><a href="#">1병</a></li>
+        <li role="presentation"><a href="#">2병이상</a></li>
+      </ul>
+    </div>
+    <div class="f_6" id="f_num">배변 :
+      <ul class="nav nav-pills">
+        <li role="presentation"><a href="#">못함</a></li>
+        <li role="presentation"><a href="#">설사</a></li>
+        <li role="presentation"><a href="#">쾌변</a></li>
+      </ul>
+    </div>
+    </div>
+
+  </div>
+
+  <div class="b_button">
+  <div class="btn-group btn-group-lg" role="group" aria-label="...">
+    <button type="button" class="btn btn-default">저장하기</button>
+  </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+/*tag_page.css*/
+#tag_search {
+  text-align: center;
+  width: 60%;
+  margin: 20px 0 0 70px;
+}
+
+.post {
+  height: 470px;
+  margin: 25px;
+}
+.media-body {
+  margin-bottom: 10px;
+}
+.post1 {
+  margin-top: 60px;
+}
+.post1, .post2, .post3, .post4 {
+  font-size: 15px;
+  height: 90px;
+  margin-left: 60px;
+}

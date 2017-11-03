@@ -1,0 +1,14 @@
+/*myreview_page_css*/
+.middle-tag {
+  margin: 0 0 20px 115px;
+}
+
+.middle_tag_button {
+  margin: 0 40px 230px 45px;
+}
+
+#btn-middle {
+  width: 90%;
+  border-radius: 0;
+  font: unset;
+}

@@ -1,0 +1,33 @@
+/*profile.css*/
+.top-container {
+  margin-right: 120px;
+}
+
+.top-diary > span {
+  margin-left: 130px;
+}
+
+.top-diary > img {
+  width: 27%;
+  position: relative;
+  float: right;
+  top: -44px;
+  margin-right: -4px;
+}
+
+.middle-diary {
+  margin: 70px;
+}
+
+.bottom-diary {
+  margin-left: 60px;
+}
+
+.bottom-diary-coin {
+  margin: 35px -27px 0 -31px;
+}
+
+.bottom-diary-coin > img {
+  width: 30%;
+  border: 1px solid black;
+}
