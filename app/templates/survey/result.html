@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_content %}
+<strong class="tlt_question" style="text-align: left">{{result|replace('\n','<br/><br/>')|safe}}</strong>
+{% endblock %}

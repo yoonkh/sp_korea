@@ -1,0 +1,62 @@
+{% extends "base.html" %} {% block page_content %}
+    <strong class="tlt_question">당신의 운동 목적은?</strong>
+    <div class="item_vote">
+        <a class="link_item link_left" onclick='next("A", 1)'>
+            <span class="txt_item">다이어트</span>
+        </a>
+        <a class="link_item link_right" onclick='next("B", 1)'>
+            <span class="txt_item">체력증진</span>
+        </a>
+    </div>
+    <div class="item_vote">
+        <a class="link_item link_left" onclick='next("C", 1)'>
+            <span class="txt_item">실력향상</span>
+        </a>
+        <a class="link_item link_right" onclick='next("D", 1)'>
+            <span class="txt_item">재활</span>
+        </a>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        var resultArr = new Array(7);
+
+        function next(val, qNum) {
+            if (qNum == 2) {
+                if (checkInput($('input[name="optradio"]:checked').val(), $("#birth").val(), $("#height").val(), $("#weight").val(), $("#sleep").val())) {
+                    val = $('input[name="optradio"]:checked').val() + ' ' + $("#birth").val() + ' ' + $("#height").val() + ' ' + $("#weight").val() + ' ' + $("#sleep").val();
+                } else {
+                    return
+                }
+            } else if (qNum == 7) {
+                val = $('#sick').val() + " " + $('#med').val();
+            }
+            resultArr[qNum - 1] = val;
+
+            if (qNum <= 6) {
+                href = '{{ url_for("survey", page="") }}' + (qNum + 1);
+                $("#qContainer").load(href);
+            } else {
+                resultCodeSet(resultArr);
+            }
+        }
+
+        function checkInput(val0, val1, val2, val3, val4) {
+            if (val0 == '' || val1 == '' || val2 == '' || val3 == '' || val4 == '') {
+                alert('모든 값을 입력해주세요.');
+                return false;
+            }
+            return true;
+        }
+
+        function resultCodeSet(resArr) {
+            var resultCode = "";
+            $(resArr).each(function (idx, data) {
+                resultCode += " " + data
+            });
+            $('#resCode').val(resultCode);
+            $('#form').submit();
+        }
+    </script>
+{% endblock %}

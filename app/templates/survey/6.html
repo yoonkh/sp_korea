@@ -1,0 +1,18 @@
+{% block page_content %}
+<strong class="tlt_question">일상생활 중에 스트레스를 어느정도 받습니까?</strong>
+<div class="item_vote">
+    <a class="link_item link_left" onclick='next("A", 6)'>
+            <span class="txt_item">대단히 많이 느낀다</span>
+        </a>
+    <a class="link_item link_right" onclick='next("B", 6)'>
+            <span class="txt_item">많이 느끼는 편이다</span>
+        </a>
+</div>
+<div class="item_vote">
+    <a class="link_item link_left" onclick='next("C", 6)'>
+            <span class="txt_item">조금 느끼는 편이다.</span>
+        </a>
+    <a class="link_item link_right" onclick='next("D", 6)'>
+                <span class="txt_item">거의 느끼지 않는다</span>
+            </a>
+</div>{% endblock %}
