@@ -136,3 +136,6 @@ venv.bak/
 .mypy_cache/
 
 # End of https://www.gitignore.io/api/git,macos,python
+data-dev.sqlite
+dump.rdb
+*.sqlite
