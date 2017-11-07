@@ -1,5 +1,8 @@
 <meta name="charset" content="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Go-exercise">
+<meta name="keywords" content="exercise, health, gym, video, diary">
+<meta name="author" content="Black Ruby Studio">
 <title>{% block page_title %}{{ config.APP_NAME }}{% endblock %}</title>
 
 {% assets 'vendor_css' %}<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">{% endassets %}
@@ -7,3 +10,13 @@
 
 {% assets 'vendor_js' %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
 {% assets 'app_js' %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-71063467-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-71063467-2');
+</script>

@@ -15,7 +15,7 @@ if os.path.exists('config.env'):
 
 
 class Config:
-    APP_NAME = 'Flask-Base'
+    APP_NAME = 'Go-exercise'
     if os.environ.get('SECRET_KEY'):
         SECRET_KEY = os.environ.get('SECRET_KEY')
     else:
