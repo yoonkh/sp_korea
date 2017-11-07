@@ -21,7 +21,7 @@ def survey_page(page):
     res_code = request.args.get('resCode', None)
     if res_code:
         return render_template('/survey/result.html', result=find_pattern(res_code))
-    return render_template('/survey/'+page+'.html')
+    return render_template('/survey/' + page + '.html')
 
 
 

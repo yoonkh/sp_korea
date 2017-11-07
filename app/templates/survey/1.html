@@ -35,7 +35,7 @@
             resultArr[qNum - 1] = val;
 
             if (qNum <= 6) {
-                href = '{{ url_for("survey", page="") }}' + (qNum + 1);
+                href = '{{ url_for(".survey_page", page="") }}' + (qNum + 1);
                 $("#qContainer").load(href);
             } else {
                 resultCodeSet(resultArr);
