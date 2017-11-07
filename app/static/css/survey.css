@@ -10,7 +10,7 @@ a{
 }
 /* header */
 .survey-header{
-    background-image: url("../static/img/survey_header.jpeg");
+    background-image: url("../images/survey_header.jpeg");
     margin-bottom: 25px;
     background-size: cover;
     height: 190px;

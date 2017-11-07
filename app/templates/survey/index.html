@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'survey/base.html' %}
 {% block page_head %}
 <header class="survey-header" id="survey-main">
     <div class="site-heading">
@@ -10,5 +10,5 @@
 {% block page_content %}
 <strong>준비 됐나요?</strong>
 <p> 평소의 당신과 더 가까운 보기를<br>완전 솔직하게 골라주세요.</p>
-<a href="{{ url_for('survey', page=1) }}" class="survey_start">준비 됐어요!</a>
+<a href="{{ url_for('.survey_page', page=1) }}" class="survey_start">준비 됐어요!</a>
 {% endblock %}
