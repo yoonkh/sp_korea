@@ -7,7 +7,7 @@ PYTHON_VERSION = sys.version_info[0]
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 if os.path.exists('config.env'):
-    print('Importing environment from .env file')
+    print('Importing environment from config.env file')
     for line in open('config.env'):
         var = line.strip().split('=')
         if len(var) == 2:

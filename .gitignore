@@ -138,3 +138,4 @@ venv.bak/
 # End of https://www.gitignore.io/api/git,macos,python
 *.rdb
 *.sqlite
+*.env
