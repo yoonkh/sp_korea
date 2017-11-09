@@ -16,6 +16,7 @@ diary_users = db.Table('diary_users',
                        db.Column('water_id', db.Integer, db.ForeignKey('water.id')),
                        db.Column('sleep_id', db.Integer, db.ForeignKey('sleep.id')),
                        db.Column('health_id', db.Integer, db.ForeignKey('health.id')),
+                       db.Column('etc_id', db.Integer, db.ForeignKey('etc.id')),
                        )
 
 
@@ -151,3 +152,26 @@ class Health(db.Model):
     users = db.relationship("User", secondary="diary_users", backref=db.backref('healths'))
 
 
+
+class Etc(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    # 체중 입력
+    weight = db.Column(db.String(10))
+    # 체지방 입력
+    fat = db.Column(db.String(10))
+    # 골격근 입력
+    skeletal_muscle = db.Column(db.String(10))
+
+    # 흡연 - select field
+    # smoke = db.
+
+    # 음주 - selet field
+    # alcohol = db.
+
+    # 배변 - select field
+    # bowel = db.
+
+    create_dttm = db.Column(db.DateTime, nullable=False)
+
+    user = db.relationship("User", secondary="diary_users", backref=db.backref('etcs'))
