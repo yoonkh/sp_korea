@@ -12,20 +12,16 @@ from app.models import Role
 diary_users = db.Table('diary_users',
                        db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
                        db.Column('diary_id', db.Integer, db.ForeignKey('diary.id')),
-                       db.Column('food_id', db.Integer, db.ForeignKey('food.id'))
+                       db.Column('food_id', db.Integer, db.ForeignKey('food.id')),
+                       db.Column('water_id', db.Integer, db.ForeignKey('water.id')),
                        )
 
 
-create_dttm = db.Column(db.DateTime.Date, nullable=False)
 
 
-users = db.relationship("User", secondary="diary_users", backref=db.backref('diarys',
-                                                                            'foods',
-                                                                            'waters',
-                                                                            ))
 
 
-class Diary(db.Model, create_dttm, users):
+class Diary(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     # title = db.Column(db.String(255))
@@ -50,16 +46,17 @@ class Diary(db.Model, create_dttm, users):
     # ... 기타 필드 추가
 
 
-    # create_dttm = db.Column(db.DateTime.Date, nullable=False)
+    create_dttm = db.Column(db.DateTime, nullable=False)
 
-    # users = db.relationship("User", secondary="diary_users", backref=db.backref('diarys'))
+    users = db.relationship("User", secondary="diary_users", backref=db.backref('diarys'))
 
 
 
 
 
 # 식단일지입니다
-class Food(db.Model, create_dttm, users):
+
+class Food(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     breakfast_food_type = db.Column(db.String(10))
@@ -83,14 +80,15 @@ class Food(db.Model, create_dttm, users):
 
     # ... 기타 필드 추가
 
-    # create_dttm = db.Column(db.DateTime.Date, nullable=False)
+    create_dttm = db.Column(db.DateTime, nullable=False)
 
-    # users = db.relationship("User", secondary="diary_users", backref=db.backref('foods'))
+    users = db.relationship("User", secondary="diary_users", backref=db.backref('foods'))
 
 
 
-class Water(db.Model, create_dttm, users):
-    id = db.Column(db.Integer, primary_Key=True)
+class Water(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
 
     water_type = db.Column(db.String(10))
 
@@ -98,7 +96,9 @@ class Water(db.Model, create_dttm, users):
 
     water_ml = db.Column(db.String(10))
 
-    # users = db.relationship("User", secondary="diary_users", backref=db.backref('waters'))
+    create_dttm = db.Column(db.DateTime, nullable=False)
+
+    users = db.relationship("User", secondary="diary_users", backref=db.backref('waters'))
 
 
 

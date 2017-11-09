@@ -62,7 +62,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
-    create_dttm = db.Column(db.DateTime.Date, nullable=False)
+    create_dttm = db.Column(db.DateTime, nullable=False)
 
     # diarys = relationship("Diary", secondary="diary_users")
 
