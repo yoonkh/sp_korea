@@ -1,6 +1,6 @@
 from flask import render_template, request
 
-from ..pattern import find_pattern
+from .pattern import find_pattern
 from . import survey
 
 
