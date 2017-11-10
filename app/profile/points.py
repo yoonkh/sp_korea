@@ -1,6 +1,12 @@
-from ..models import Point
+from ..models import Point, db
 
-'''
-def get_points_by_user_id(user_id):
-    points = Point.query.filter_by(user_id).group_by(user_id)
-'''
+
+def get_total_point(user_id):
+    points = Point.query.filter_by(user_id).group_by(user_id).all()
+    return points.amount
+
+
+def add_points(user_id, amount):
+    point = Point(user=user_id, amount=amount)
+    db.session.add(point)
+    db.session.commit()
