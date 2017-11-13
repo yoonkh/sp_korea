@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+{% import 'macros/form_macros.html' as f %}
+
 <html lang="ko">
 
 <head>
@@ -86,5 +88,8 @@
 </div>
 
 </body>
+  {% if form %}
+    {{ f.render_form(form, extra_classes='fluid') }}
+  {% endif %}
 
 </html>

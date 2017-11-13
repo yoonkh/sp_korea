@@ -1,11 +1,17 @@
-import datetime
+from datetime import datetime
 
+from click import Choice
 from flask_sqlalchemy import Model
+from flask_wtf.file import FileRequired, FileField
 from sqlalchemy.orm import relationship
+from wtforms import SelectField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms.validators import Required
 
 from app import db
-from app.models import Role
 
+from app.models import Role
+from flask_wtf import Form
 
 
 
@@ -20,16 +26,13 @@ diary_users = db.Table('diary_users',
                        )
 
 
-
-
-
-
 class Diary(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     # title = db.Column(db.String(255))
 
     # 운동일지 다이어리
+
     # 운동 1,2,3,4
     exe_per_day = db.Column(db.String(10))
     # 운동종류 입력
@@ -38,7 +41,7 @@ class Diary(db.Model):
     rep = db.Column(db.String(10))
 
     # 운동사진 업로드필드
-    # exe_photo = db.Column(db.)
+    exe_photo = FileField(validators=[FileRequired()])
 
     # 운동이름 입력
     exe_name = db.Column(db.String(10))
@@ -47,19 +50,15 @@ class Diary(db.Model):
     # 운동 시간 입력
     exe_time = db.Column(db.String(10))
 
-
     # gif 페이지 메모
+
     exe_memo = db.Column(db.String(255))
 
     # ... 기타 필드 추가
 
-
-    create_dttm = db.Column(db.DateTime, nullable=False)
+    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     users = db.relationship("User", secondary="diary_users", backref=db.backref('diarys'))
-
-
-
 
 
 # 식단일지입니다
@@ -79,7 +78,7 @@ class Food(db.Model):
     kcal_food = db.Column(db.String(10))
 
     # 식단사진 업로드필드
-    # photo_food = db.Column(db.)
+    photo_food = FileField(validators=[FileRequired()])
 
     # 음식 이름 입력
     food_name = db.Column(db.String(10))
@@ -88,7 +87,7 @@ class Food(db.Model):
     food_kcal = db.Column(db.String(10))
 
     # 식사선택 select field
-    # food_select = db.
+    food_select = SelectField('음식종류')
 
     # 음식 메모 입력란
     food_memo = db.Column(db.String(255))
@@ -96,9 +95,10 @@ class Food(db.Model):
 
     # ... 기타 필드 추가
 
-    create_dttm = db.Column(db.DateTime, nullable=False)
+    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     users = db.relationship("User", secondary="diary_users", backref=db.backref('foods'))
+
 
 
 
@@ -112,7 +112,7 @@ class Water(db.Model):
     # 물 용량 입력
     water_ml = db.Column(db.String(10))
 
-    create_dttm = db.Column(db.DateTime, nullable=False)
+    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     users = db.relationship("User", secondary="diary_users", backref=db.backref('waters'))
 
@@ -124,7 +124,7 @@ class Sleep(db.Model):
     # 수면시간 입력필드입니다
     sleep_time = db.Column(db.String(10))
 
-    create_dttm = db.Column(db.DateTime, nullable=False)
+    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     users = db.relationship("User", secondary="diary_users", backref=db.backref('sleeps'))
 
@@ -134,11 +134,11 @@ class Health(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     # 혈압 - select field
-    # blood_pressure = db.
+    blood_pressure = SelectField('혈압')
     # 혈당 - select field
-    # blood_sugar = db.
+    blood_sugar = SelectField('혈당')
     # 심리 - select field
-    # mind = db.
+    mind = SelectField('심리')
 
     # 혈압 입력
     blood_pressure_mmhg = db.Column(db.String(10))
@@ -147,10 +147,9 @@ class Health(db.Model):
     # 심리 입력
     mind_mg_dl = db.Column(db.String(10))
 
-    create_dttm = db.Column(db.DateTime, nullable=False)
+    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     users = db.relationship("User", secondary="diary_users", backref=db.backref('healths'))
-
 
 
 class Etc(db.Model):
@@ -164,14 +163,14 @@ class Etc(db.Model):
     skeletal_muscle = db.Column(db.String(10))
 
     # 흡연 - select field
-    # smoke = db.
+    smoke = SelectField('흡연')
 
-    # 음주 - selet field
-    # alcohol = db.
+    # 음주 - select field
+    alcohol = SelectField('음주')
 
     # 배변 - select field
-    # bowel = db.
+    bowel = SelectField('배변')
 
-    create_dttm = db.Column(db.DateTime, nullable=False)
+    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     user = db.relationship("User", secondary="diary_users", backref=db.backref('etcs'))

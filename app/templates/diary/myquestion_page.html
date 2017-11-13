@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+{% import 'macros/form_macros.html' as f %}
+
 <html lang="ko">
 
 <head>
@@ -13,7 +15,7 @@
 
 <body>
   <div class="top-diary">
-    <button type="button" class="btn"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span></button>
+    <button type="button" class="btn"><a href="#"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span></a></button>
     <div class="top-container">나의문진</div>
   </div>
   <div class="top-diary">
@@ -31,4 +33,7 @@
   </div>
   </div>
 </body>
+  {% if form %}
+    {{ f.render_form(form, extra_classes='fluid') }}
+  {% endif %}
 </html>

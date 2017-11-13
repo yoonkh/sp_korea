@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+{% import 'macros/form_macros.html' as f %}
 
 <head>
   <meta charset="UTF-8">
@@ -12,7 +13,7 @@
 
 <body>
   <div class="top-diary">
-    <button type="button" class="btn"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span></button>
+    <button type="button" class="btn"><a href="#"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span></a></button>
     <div class="top-container">운동일지</div>
     <div class="page-header">
       <h2><input type="date" id="now_date">
@@ -30,17 +31,17 @@
   </div>
 
   <div class="middle_f_category">
-    <div class="f_1" id="f_num">운동 1:<span><a href="">운동종류</a></span>
+    <div class="f_1" id="f_num">운동 1:<span>운동종류</span>
       <input type="number" name="userid" autocomplete="off" placeholder="횟수" class="main_input" style='IME-MODE: disabled' id="num">
 
     </div>
-    <div class="f_2" id="f_num">운동 2:<span><a href="">운동종류</a></span>
+    <div class="f_2" id="f_num">운동 2:<span>운동종류</span>
       <input type="number" name="userid" autocomplete="off" placeholder="횟수" class="main_input" style='IME-MODE: disabled' id="num">
     </div>
-    <div class="f_3" id="f_num">운동 3:<span><a href="">운동종류</a></span>
+    <div class="f_3" id="f_num">운동 3:<span>운동종류</span>
       <input type="number" name="userid" autocomplete="off" placeholder="횟수" class="main_input" style='IME-MODE: disabled' id="num">
     </div>
-    <div class="f_4" id="f_num">운동 4:<span><a href="">운동종류</a></span>
+    <div class="f_4" id="f_num">운동 4:<span>운동종류</span>
       <input type="number" name="userid" autocomplete="off" placeholder="횟수" class="main_input" style='IME-MODE: disabled' id="num">
     </div>
   </div>
@@ -49,6 +50,10 @@
     <button type="button" class="btn btn-default">저장하기</button>
   </div>
   </div>
+
+  {% if form %}
+    {{ f.render_form(form, extra_classes='fluid') }}
+  {% endif %}
 
 
 </body>

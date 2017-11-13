@@ -4,7 +4,7 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_assets import Environment
-from flask_wtf import CsrfProtect
+from flask_wtf import CSRFProtect
 from flask_compress import Compress
 from flask_rq import RQ
 
@@ -15,7 +15,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 mail = Mail()
 db = SQLAlchemy()
-csrf = CsrfProtect()
+csrf = CSRFProtect()
 compress = Compress()
 
 # Set up Flask-Login
@@ -70,5 +70,8 @@ def create_app(config_name):
 
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
+
+    from .diary import diary as diary_blueprint
+    app.register_blueprint(diary_blueprint, url_prefix='/diary')
 
     return app

@@ -7,7 +7,7 @@ from . import main
 
 
 @main.route('/')
-def basic():
+def index():
     return redirect(url_for('.survey_index'))
 
 
@@ -22,6 +22,11 @@ def survey_page(page):
     if res_code:
         return render_template('/survey/result.html', result=find_pattern(res_code))
     return render_template('/survey/' + page + '.html')
+
+
+@main.route('/about')
+def about():
+    return 'about page'
 
 
 

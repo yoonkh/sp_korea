@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+{% import 'macros/form_macros.html' as f %}
+
 <html lang="ko">
 
 <head>
@@ -12,7 +14,7 @@
 
 <body>
   <div class="top-diary">
-    <button type="button" class="btn"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span></button>
+    <button type="button" class="btn"><a href="#"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span></a></button>
     <div class="top-container">운동일지</div>
     <div class="page-header">
       <h2><input type="date" id="now_date">
@@ -29,14 +31,14 @@
     </div>
   </div>
   <div class="middle_menu">
-    <div class="f_1" id="f_num">혈압 :<span>수축기/이완기</span>
+    <div class="f_1" id="f_num">혈압 :<span><a href="#">수축기</a>/<a href="#">이완기</a></span>
       <input type="number" name="userid" autocomplete="off" placeholder="mmhg" class="main_input" style='IME-MODE: disabled' id="num">
 
     </div>
-    <div class="f_2" id="f_num">혈당 :<span>공복/식후2시간</span>
+    <div class="f_2" id="f_num">혈당 :<span><a href="#">공복</a>/<a href="#">식후2시간</a></span>
       <input type="number" name="userid" autocomplete="off" placeholder="mg/dl" class="main_input" style='IME-MODE: disabled' id="num">
     </div>
-    <div class="f_3" id="f_num">심리 :<span>공복/식후2시간</span>
+    <div class="f_3" id="f_num">심리 :<span><a href="#">공복</a>/<a href="#">식후2시간</a></span>
       <input type="number" name="userid" autocomplete="off" placeholder="mg/dl" class="main_input" style='IME-MODE: disabled' id="num">
     </div>
   </div>
@@ -48,4 +50,7 @@
   </div>
 
 </body>
+  {% if form %}
+    {{ f.render_form(form, extra_classes='fluid') }}
+  {% endif %}
 </html>
