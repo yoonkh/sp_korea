@@ -71,6 +71,41 @@ def manage():
     return render_template('account/manage.html', user=current_user, form=None)
 
 
+@account.route('/manage/point')
+@login_required
+def manage_point():
+    """포인트 충전 및 관리 화면."""
+    return render_template('account/manage.html', user=current_user, form=None)
+
+
+@account.route('/manage/payment')
+@login_required
+def manage_payment():
+    """PG사 페이지내 결제 이후, 결제여부 체크 및 금액 변조확인
+    의사 코딩:  https://github.com/iamport/iamport-manual/blob/master/%EC%9D%B8%EC%A6%9D%EA%B2%B0%EC%A0%9C/README.md
+    imp_uid = extract_POST_value_from_url('imp_uid') //post ajax request로부터 imp_uid확인
+
+    payment_result = rest_api_to_find_payment(imp_uid) //imp_uid로 아임포트로부터 결제정보 조회
+    amount_to_be_paid = query_amount_to_be_paid(payment_result.merchant_uid) //결제되었어야 하는 금액 조회. 가맹점에서는 merchant_uid기준으로 관리
+
+    IF payment_result.status == 'paid' AND payment_result.amount == amount_to_be_paid
+        success_post_process(payment_result) //결제까지 성공적으로 완료
+    ELSE IF payment_result.status == 'ready' AND payment.pay_method == 'vbank'
+        vbank_number_assigned(payment_result) //가상계좌 발급성공
+    ELSE
+        fail_post_process(payment_result) //결제실패 처리
+    """
+    imp_uid = request.args.get('imp_uid')
+    merchant_uid = request.args.get('merchant_uid')
+    true_or_false = request.args.get('imp_success')
+    print('====== Result =====')
+    print(imp_uid)
+    print(merchant_uid)
+    print(true_or_false)
+    print('===================')
+    return redirect(url_for('account.manage_point'))
+
+
 @account.route('/reset-password', methods=['GET', 'POST'])
 def reset_password_request():
     """Respond to existing user's request to reset their password."""
@@ -269,10 +304,3 @@ def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('account/unconfirmed.html')
-
-
-@account.route('/add-point')
-@login_required
-def add_point():
-    """포인트 충전 화면."""
-    return 'please add html'
