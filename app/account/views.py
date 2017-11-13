@@ -269,3 +269,10 @@ def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('account/unconfirmed.html')
+
+
+@account.route('/add-point')
+@login_required
+def add_point():
+    """포인트 충전 화면."""
+    return 'please add html'

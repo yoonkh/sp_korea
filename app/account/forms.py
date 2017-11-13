@@ -1,5 +1,5 @@
 from flask import url_for
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import ValidationError
 from wtforms.fields import (BooleanField, PasswordField, StringField,
                             SubmitField)
@@ -9,7 +9,7 @@ from wtforms.validators import Email, EqualTo, InputRequired, Length
 from ..models import User
 
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     email = EmailField(
         '이메일', validators=[InputRequired(), Length(1, 64), Email()])
     password = PasswordField('비밀번호', validators=[InputRequired()])
@@ -17,7 +17,7 @@ class LoginForm(Form):
     submit = SubmitField('로그인')
 
 
-class RegistrationForm(Form):
+class RegistrationForm(FlaskForm):
     first_name = StringField(
         '이름', validators=[InputRequired(), Length(1, 64)])
     last_name = StringField(
@@ -39,7 +39,7 @@ class RegistrationForm(Form):
                                   .format(url_for('account.login')))
 
 
-class RequestResetPasswordForm(Form):
+class RequestResetPasswordForm(FlaskForm):
     email = EmailField(
         '이메일', validators=[InputRequired(), Length(1, 64), Email()])
     submit = SubmitField('확인')
@@ -48,7 +48,7 @@ class RequestResetPasswordForm(Form):
     # that an account with the given email exists.
 
 
-class ResetPasswordForm(Form):
+class ResetPasswordForm(FlaskForm):
     email = EmailField(
         'Email', validators=[InputRequired(), Length(1, 64), Email()])
     new_password = PasswordField(
@@ -65,7 +65,7 @@ class ResetPasswordForm(Form):
             raise ValidationError('알수없는 이메일 주소.')
 
 
-class CreatePasswordForm(Form):
+class CreatePasswordForm(FlaskForm):
     password = PasswordField(
         '비밀번호',
         validators=[
@@ -76,7 +76,7 @@ class CreatePasswordForm(Form):
     submit = SubmitField('비밀번호 설정')
 
 
-class ChangePasswordForm(Form):
+class ChangePasswordForm(FlaskForm):
     old_password = PasswordField('이전 비밀번호', validators=[InputRequired()])
     new_password = PasswordField(
         '새 비밀번호',
@@ -88,7 +88,7 @@ class ChangePasswordForm(Form):
     submit = SubmitField('비밀번호 갱신')
 
 
-class ChangeEmailForm(Form):
+class ChangeEmailForm(FlaskForm):
     email = EmailField(
         '새 이메일', validators=[InputRequired(), Length(1, 64), Email()])
     password = PasswordField('비밀번호 갱신', validators=[InputRequired()])
