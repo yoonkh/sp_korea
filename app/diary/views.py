@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename, redirect
 from app.models import Diary
 from app.uploads import check_files, upload_files
 from .forms import DiaryForm, UploadForm, DiaryFormPhoto, FitForm, FoodForm, FoodFormPhoto, WaterForm, SleepForm, \
-    HealthForm, EtcForm, MyquestionForm, TagForm, VideoForm, MyreviewForm
+    HealthForm, EtcForm, MyquestionForm, TagForm, VideoForm, MyreviewForm, ProfileForm
 from . import diary
 
 
@@ -164,3 +164,9 @@ def diary_view_video():
 def diary_view_tag():
     form = TagForm()
     return render_template('diary/tag_page.html', form=form)
+
+
+@diary.route('/profile', methods=['GET', 'POST'])
+def diary_view_profile():
+    form = ProfileForm()
+    return render_template('diary/profile.html', form=form)

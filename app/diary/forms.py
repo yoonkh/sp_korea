@@ -57,8 +57,16 @@ class SleepForm(FlaskForm):
 
 
 class HealthForm(FlaskForm):
+    pressure_select = SelectField(label='혈압', choices=[('', '수축기'),
+                                                       ('', '이완기')])
     pressure = StringField('mmHg')
+
+    sugar_select = SelectField(label='혈당', choices=[('', '공복'),
+                                                    ('', '식후2시간')])
     sugar = StringField('mg/dl')
+
+    mind_select = SelectField(label='심리', choices=[('', '공복'),
+                                                   ('', '식후2시간')])
     mind = StringField('mg/dl')
     submit = SubmitField('저장')
 
@@ -105,3 +113,9 @@ class TagForm(FlaskForm):
     search = StringField('검색창')
 
 
+class ProfileForm(FlaskForm):
+    my_type = StringField('내 유형')
+    coin = IntegerField('남은 코인')
+    coin_select = SelectField(label='코인 충전하기', choices=[('', 'type1'),
+                                                        ('', 'type2'),
+                                                        ('', 'type3')])
