@@ -10,11 +10,12 @@ class DiaryForm(FlaskForm):
     submit = SubmitField('저장하기')
 
 
-class UploadForm(FlaskForm):
-    file = FileField('이미지', render_kw={'multiple': True})
+# class UploadForm(FlaskForm):
+#     file = FileField('이미지', render_kw={'multiple': True})
 
 
 class DiaryFormPhoto(FlaskForm):
+    photo = FileField('사진 업로드')
     name = StringField('운동이름')
     kcal = IntegerField('소모 칼로리 kcal')
     time = IntegerField('Min or hour')
@@ -111,6 +112,7 @@ class VideoForm(FlaskForm):
 
 class TagForm(FlaskForm):
     search = StringField('검색창')
+
 
 
 class ProfileForm(FlaskForm):

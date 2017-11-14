@@ -1,13 +1,14 @@
 import os
 import types
-
-from flask import render_template, url_for, request, flash
+from flask import render_template, url_for, request, flash, app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename, redirect
 
+from app import photos
+
 from app.models import Diary
-from app.uploads import check_files, upload_files
-from .forms import DiaryForm, UploadForm, DiaryFormPhoto, FitForm, FoodForm, FoodFormPhoto, WaterForm, SleepForm, \
+from config import basedir
+from .forms import DiaryForm, DiaryFormPhoto, FitForm, FoodForm, FoodFormPhoto, WaterForm, SleepForm, \
     HealthForm, EtcForm, MyquestionForm, TagForm, VideoForm, MyreviewForm, ProfileForm
 from . import diary
 
@@ -19,6 +20,8 @@ def diary_view():
     if form.validate_on_submit():
         num = form.number.data
         types = form.type.data
+        # basedirs = os.path.join(basedir.static)
+        # print(basedirs)
         print(num)
         print(types)
 
@@ -34,13 +37,19 @@ def diary_view():
 @diary.route('/photo', methods=['GET', 'POST'])
 def diary_view_photo():
     """운동일지 두번째 화면"""
+    # image = None
+    # form = DiaryFormPhoto()
     form = DiaryFormPhoto()
     # form_photo = UploadForm()
     if form.validate_on_submit():
-        images = request.files.getlist("file")
+        # image = 'uploads/' + form_photo.image_file.data.filename
+        # form_photo.image_file.data.save(os.path.join('static', image))
+
         names = form.name.data
         kcals = form.kcal.data
         times = form.time.datas
+        # print(form_photo.image_file.data.save)
+        # print(basedir)
         print(names)
         print(kcals)
         print(times)
@@ -170,3 +179,11 @@ def diary_view_tag():
 def diary_view_profile():
     form = ProfileForm()
     return render_template('diary/profile.html', form=form)
+
+
+# @diary.route('/upload', methods=['GET', 'POST'])
+# def diary_upload():
+#     if request.method == 'POST' and 'photo' in request.files:
+#         filename = photos.save(request.files['photo'])
+#         return filename
+#     return render_template('diary/upload.html')

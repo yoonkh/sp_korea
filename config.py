@@ -10,7 +10,7 @@ else:
     import urlparse
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
+# basedir2 = os.path.join(basedir, 'app/static')
 
 if os.path.exists('config.env'):
     print('Importing environment from .env file')
@@ -123,3 +123,5 @@ config = {
     'heroku': HerokuConfig,
     'unix': UnixConfig
 }
+
+
