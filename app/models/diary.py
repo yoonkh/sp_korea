@@ -1,19 +1,8 @@
 from datetime import datetime
 
-from click import Choice
-from flask_sqlalchemy import Model
 from flask_wtf.file import FileRequired, FileField
-from sqlalchemy.orm import relationship
 from wtforms import SelectField
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from wtforms.validators import Required
-
 from app import db
-
-from app.models import Role
-from flask_wtf import Form
-
-
 
 diary_users = db.Table('diary_users',
                        db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
@@ -22,12 +11,10 @@ diary_users = db.Table('diary_users',
                        db.Column('water_id', db.Integer, db.ForeignKey('water.id')),
                        db.Column('sleep_id', db.Integer, db.ForeignKey('sleep.id')),
                        db.Column('health_id', db.Integer, db.ForeignKey('health.id')),
-                       db.Column('etc_id', db.Integer, db.ForeignKey('etc.id')),
-                       )
+                       db.Column('etc_id', db.Integer, db.ForeignKey('etc.id')), )
 
 
 class Diary(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     # title = db.Column(db.String(255))
 
@@ -64,7 +51,6 @@ class Diary(db.Model):
 # 식단일지입니다
 
 class Food(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
 
     # 식단 (음식) 종류
@@ -92,7 +78,6 @@ class Food(db.Model):
     # 음식 메모 입력란
     food_memo = db.Column(db.String(255))
 
-
     # ... 기타 필드 추가
 
     create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -100,10 +85,7 @@ class Food(db.Model):
     users = db.relationship("User", secondary="diary_users", backref=db.backref('foods'))
 
 
-
-
 class Water(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     # 물 종류
     water_type = db.Column(db.String(10))
@@ -118,7 +100,6 @@ class Water(db.Model):
 
 
 class Sleep(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
 
     # 수면시간 입력필드입니다
@@ -130,7 +111,6 @@ class Sleep(db.Model):
 
 
 class Health(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
 
     # 혈압 - select field
@@ -153,7 +133,6 @@ class Health(db.Model):
 
 
 class Etc(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     # 체중 입력
     weight = db.Column(db.String(10))

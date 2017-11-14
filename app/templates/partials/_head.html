@@ -1,5 +1,12 @@
 <meta name="charset" content="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--<link rel="shortcut icon" href="#" type="image/x-icon">-->
+<meta property="og:type" content="website">
+<meta property="og:title" content="당신에게 맞는 운동은?">
+<meta property="og:description" content="운동 방식 분석 테스트">
+<meta property="og:site_name" content="spkorea.com">
+<meta property="og:image" content="#">
+
 <title>{% block page_title %}{{ config.APP_NAME }}{% endblock %}</title>
 
 {% assets 'vendor_css' %}<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">{% endassets %}
@@ -7,3 +14,13 @@
 
 {% assets 'vendor_js' %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
 {% assets 'app_js' %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-71063467-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-71063467-2');
+</script>

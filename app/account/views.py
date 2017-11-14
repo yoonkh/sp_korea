@@ -1,12 +1,14 @@
-from flask import flash, redirect, render_template, request, url_for
+import time
+from flask import flash, redirect, render_template, request, url_for, current_app, jsonify
 from flask_login import (current_user, login_required, login_user,
                          logout_user)
 from flask_rq import get_queue
+from iamport import Iamport
 
 from . import account
 from .. import db
 from ..email import send_email
-from ..models import User
+from ..models import User, Point
 from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
                     LoginForm, RegistrationForm, RequestResetPasswordForm,
                     ResetPasswordForm)
@@ -21,10 +23,10 @@ def login():
         if user is not None and user.password_hash is not None and \
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
-            flash('You are now logged in. Welcome back!', 'success')
+            flash('로그인 되었습니다. Welcome back!', 'success')
             return redirect(request.args.get('next') or url_for('main.index'))
         else:
-            flash('Invalid email or password.', 'form-error')
+            flash('알수 없는 이메일이나 비밀번호 입니다.', 'form-error')
     return render_template('account/login.html', form=form)
 
 
@@ -49,7 +51,7 @@ def register():
             template='account/email/confirm',
             user=user,
             confirm_link=confirm_link)
-        flash('A confirmation link has been sent to {}.'.format(user.email),
+        flash('확인 이메일이 {}로 보내졌습니다.'.format(user.email),
               'warning')
         return redirect(url_for('main.index'))
     return render_template('account/register.html', form=form)
@@ -59,7 +61,7 @@ def register():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.', 'info')
+    flash('로그아웃되셨습니다.', 'info')
     return redirect(url_for('main.index'))
 
 
@@ -69,6 +71,24 @@ def logout():
 def manage():
     """Display a user's account information."""
     return render_template('account/manage.html', user=current_user, form=None)
+
+
+@account.route('/manage/point')
+@login_required
+def manage_point():
+    """포인트 충전 및 관리 화면."""
+    return render_template('account/manage.html', user=current_user, form=None)
+
+
+@account.route('/manage/payment', methods=['GET', 'POST'])
+def manage_payment():
+    iamport_api = Iamport(imp_key=current_app.config['IMP_KEY'], imp_secret=current_app.config['IMP_SECRET'])
+    # result = iamport_api.is_paid(request.args.get('amount', 0), imp_uid=request.args.get('imp_uid', None))
+    point = Point(user_id=current_user.id, amount=request.args.get('amount', 100))
+    db.session.add(point)
+    db.session.commit()
+    return jsonify({'data': render_template('account/email/success_form.html', code=302)})
+    # return jsonify({'data': render_template('account/email/fail_form.html', code=404)})
 
 
 @account.route('/reset-password', methods=['GET', 'POST'])
@@ -91,7 +111,7 @@ def reset_password_request():
                 user=user,
                 reset_link=reset_link,
                 next=request.args.get('next'))
-        flash('A password reset link has been sent to {}.'
+        flash('비밀번호 갱신 링크가 {}로 보내졌습니다.'
               .format(form.email.data), 'warning')
         return redirect(url_for('account.login'))
     return render_template('account/reset_password.html', form=form)
@@ -106,13 +126,13 @@ def reset_password(token):
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None:
-            flash('Invalid email address.', 'form-error')
+            flash('존재하지 않는 이메일입니다.', 'form-error')
             return redirect(url_for('main.index'))
         if user.reset_password(token, form.new_password.data):
-            flash('Your password has been updated.', 'form-success')
+            flash('비밀번호가 업데이트 되었습니.', 'form-success')
             return redirect(url_for('account.login'))
         else:
-            flash('The password reset link is invalid or has expired.',
+            flash('해당 링크의 기한이 지났습니다, 다시 시도하여 주십시오.',
                   'form-error')
             return redirect(url_for('main.index'))
     return render_template('account/reset_password.html', form=form)
@@ -128,10 +148,10 @@ def change_password():
             current_user.password = form.new_password.data
             db.session.add(current_user)
             db.session.commit()
-            flash('Your password has been updated.', 'form-success')
+            flash('비밀번호가 갱신되었습니다.', 'form-success')
             return redirect(url_for('main.index'))
         else:
-            flash('Original password is invalid.', 'form-error')
+            flash('원 비밀번호가 정확하지 않습니다.', 'form-error')
     return render_template('account/manage.html', form=form)
 
 
@@ -155,11 +175,11 @@ def change_email_request():
                 # object
                 user=current_user._get_current_object(),
                 change_email_link=change_email_link)
-            flash('A confirmation link has been sent to {}.'.format(new_email),
+            flash('확인메일이 {}로 전송되었습니다.'.format(new_email),
                   'warning')
             return redirect(url_for('main.index'))
         else:
-            flash('Invalid email or password.', 'form-error')
+            flash('알수 없는 이메일이나 비밀번호입니다.', 'form-error')
     return render_template('account/manage.html', form=form)
 
 
@@ -168,9 +188,9 @@ def change_email_request():
 def change_email(token):
     """Change existing user's email with provided token."""
     if current_user.change_email(token):
-        flash('Your email address has been updated.', 'success')
+        flash('이메일 주소가 갱신되었습니다.', 'success')
     else:
-        flash('The confirmation link is invalid or has expired.', 'error')
+        flash('해당 링크의 기한이 지났습니다 다시 시도하여 주십시오.', 'error')
     return redirect(url_for('main.index'))
 
 
@@ -188,7 +208,7 @@ def confirm_request():
         # current_user is a LocalProxy, we want the underlying user object
         user=current_user._get_current_object(),
         confirm_link=confirm_link)
-    flash('A new confirmation link has been sent to {}.'.format(
+    flash('새로운 확인 메일이 {}로 전송되었습니다.'.format(
         current_user.email), 'warning')
     return redirect(url_for('main.index'))
 
@@ -200,9 +220,9 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for('main.index'))
     if current_user.confirm_account(token):
-        flash('Your account has been confirmed.', 'success')
+        flash('계정이 확인되었습니다.', 'success')
     else:
-        flash('The confirmation link is invalid or has expired.', 'error')
+        flash('해당 링크의 기한이 지났거나 확인할수 없습니다 다시 시도하여 주십시오.', 'error')
     return redirect(url_for('main.index'))
 
 
@@ -214,7 +234,7 @@ def join_from_invite(user_id, token):
     a password.
     """
     if current_user is not None and current_user.is_authenticated:
-        flash('You are already logged in.', 'error')
+        flash('이미 로그인 되어있습니다.', 'error')
         return redirect(url_for('main.index'))
 
     new_user = User.query.get(user_id)
@@ -222,7 +242,7 @@ def join_from_invite(user_id, token):
         return redirect(404)
 
     if new_user.password_hash is not None:
-        flash('You have already joined.', 'error')
+        flash('이미 회원가입이 되어있습니다.', 'error')
         return redirect(url_for('main.index'))
 
     if new_user.confirm_account(token):
@@ -231,14 +251,12 @@ def join_from_invite(user_id, token):
             new_user.password = form.password.data
             db.session.add(new_user)
             db.session.commit()
-            flash('Your password has been set. After you log in, you can '
-                  'go to the "Your Account" page to review your account '
-                  'information and settings.', 'success')
+            flash('비밀번호가 설정되었습니다. 마이페이지에서 계정 설정을 확인하시고 수정하실수 있습니다.', 'success')
             return redirect(url_for('account.login'))
         return render_template('account/join_invite.html', form=form)
     else:
-        flash('The confirmation link is invalid or has expired. Another '
-              'invite email with a new link has been sent to you.', 'error')
+        flash('해당 링크는 존재하지 않거나 기한이 지났습니다.'
+              '새로운 확인 메일을 전송하였습니다.', 'error')
         token = new_user.generate_confirmation_token()
         invite_link = url_for(
             'account.join_from_invite',

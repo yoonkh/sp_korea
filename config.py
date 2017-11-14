@@ -1,19 +1,14 @@
 import os
 import sys
-
-from raygun4py.middleware import flask as flask_raygun
+import urllib.parse
 
 PYTHON_VERSION = sys.version_info[0]
-if PYTHON_VERSION == 3:
-    import urllib.parse
-else:
-    import urlparse
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 # basedir2 = os.path.join(basedir, 'app/static')
 
 if os.path.exists('config.env'):
-    print('Importing environment from .env file')
+    print('Importing environment from config.env file')
     for line in open('config.env'):
         var = line.strip().split('=')
         if len(var) == 2:
@@ -21,7 +16,7 @@ if os.path.exists('config.env'):
 
 
 class Config:
-    APP_NAME = 'Flask-Base'
+    APP_NAME = 'Go-exercise'
     if os.environ.get('SECRET_KEY'):
         SECRET_KEY = os.environ.get('SECRET_KEY')
     else:
@@ -44,20 +39,17 @@ class Config:
 
     REDIS_URL = os.getenv('REDISTOGO_URL') or 'http://localhost:6379'
 
-    RAYGUN_APIKEY = os.environ.get('RAYGUN_APIKEY')
-
     # Parse the REDIS_URL to set RQ config variables
-    if PYTHON_VERSION == 3:
-        urllib.parse.uses_netloc.append('redis')
-        url = urllib.parse.urlparse(REDIS_URL)
-    else:
-        urlparse.uses_netloc.append('redis')
-        url = urlparse.urlparse(REDIS_URL)
+    urllib.parse.uses_netloc.append('redis')
+    url = urllib.parse.urlparse(REDIS_URL)
 
     RQ_DEFAULT_HOST = url.hostname
     RQ_DEFAULT_PORT = url.port
     RQ_DEFAULT_PASSWORD = url.password
     RQ_DEFAULT_DB = 0
+
+    IMP_KEY = os.getenv('IMP_KEY')
+    IMP_SECRET = os.getenv('IMP_SECRET')
 
     @staticmethod
     def init_app(app):
@@ -88,8 +80,6 @@ class ProductionConfig(Config):
     def init_app(cls, app):
         Config.init_app(app)
         assert os.environ.get('SECRET_KEY'), 'SECRET_KEY IS NOT SET!'
-
-        flask_raygun.Provider(app, app.config['RAYGUN_APIKEY']).attach()
 
 
 class HerokuConfig(ProductionConfig):

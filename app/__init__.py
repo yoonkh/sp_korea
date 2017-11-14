@@ -5,7 +5,7 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_assets import Environment
-from flask_uploads import configure_uploads, UploadSet, IMAGES
+from flask_uploads import UploadSet, IMAGES
 from flask_wtf import CSRFProtect
 from flask_compress import Compress
 from flask_rq import RQ
@@ -32,9 +32,6 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # not using sqlalchemy event system, hence disabling it
-
-    app.config['UPLOADED_PHOTOS_DEST'] = 'static/uploads'
-    configure_uploads(app, photos)
 
     config[config_name].init_app(app)
 
@@ -83,5 +80,8 @@ def create_app(config_name):
 
     from .video import video as video_blueprint
     app.register_blueprint(video_blueprint, url_prefix='/video')
+
+    from .survey import survey as survey_blueprint
+    app.register_blueprint(survey_blueprint, url_prefix='/survey')
 
     return app

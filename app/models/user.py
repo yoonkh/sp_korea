@@ -2,14 +2,8 @@ from flask import current_app
 from flask_login import AnonymousUserMixin, UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
-from sqlalchemy.orm import relationship
 from werkzeug.security import check_password_hash, generate_password_hash
-
-import datetime
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
+from .point import Point
 from .. import db, login_manager
 
 
@@ -61,6 +55,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    points = db.relationship('Point', backref='user', lazy='dynamic')
 
     create_dttm = db.Column(db.DateTime, nullable=False)
 
@@ -84,6 +79,10 @@ class User(UserMixin, db.Model):
 
     def is_admin(self):
         return self.can(Permission.ADMINISTER)
+
+    @property
+    def total_point(self):
+        return Point.get_total_point(user_id=self.id)
 
     @property
     def password(self):
