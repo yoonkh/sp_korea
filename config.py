@@ -47,6 +47,9 @@ class Config:
     RQ_DEFAULT_PASSWORD = url.password
     RQ_DEFAULT_DB = 0
 
+    IMP_KEY = os.getenv('IMP_KEY')
+    IMP_SECRET = os.getenv('IMP_SECRET')
+
     @staticmethod
     def init_app(app):
         pass
