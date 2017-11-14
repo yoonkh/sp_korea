@@ -1,9 +1,11 @@
 import os
 from flask import Flask
+from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_assets import Environment
+from flask_uploads import UploadSet, IMAGES
 from flask_wtf import CSRFProtect
 from flask_compress import Compress
 from flask_rq import RQ
@@ -12,16 +14,17 @@ from config import config
 from .assets import app_css, app_js, vendor_css, vendor_js
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
 mail = Mail()
 db = SQLAlchemy()
 csrf = CSRFProtect()
 compress = Compress()
-
+bootstrap = Bootstrap()
 # Set up Flask-Login
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'account.login'
+
+photos = UploadSet('photos', IMAGES)
 
 
 def create_app(config_name):
@@ -33,6 +36,7 @@ def create_app(config_name):
     config[config_name].init_app(app)
 
     # Set up extensions
+    bootstrap.init_app(app)
     mail.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
@@ -70,6 +74,12 @@ def create_app(config_name):
 
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
+
+    from .diary import diary as diary_blueprint
+    app.register_blueprint(diary_blueprint, url_prefix='/diary')
+
+    from .video import video as video_blueprint
+    app.register_blueprint(video_blueprint, url_prefix='/video')
 
     from .survey import survey as survey_blueprint
     app.register_blueprint(survey_blueprint, url_prefix='/survey')

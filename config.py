@@ -5,6 +5,7 @@ import urllib.parse
 PYTHON_VERSION = sys.version_info[0]
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+# basedir2 = os.path.join(basedir, 'app/static')
 
 if os.path.exists('config.env'):
     print('Importing environment from config.env file')
@@ -112,3 +113,5 @@ config = {
     'heroku': HerokuConfig,
     'unix': UnixConfig
 }
+
+

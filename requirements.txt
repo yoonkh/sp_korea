@@ -7,6 +7,7 @@ click==6.7
 Faker==0.8.6
 Flask==0.12.2
 Flask-Assets==0.12
+Flask-Bootstrap==3.3.7.1
 Flask-Compress==1.4.0
 Flask-Login==0.4.0
 Flask-Mail==0.9.1
@@ -15,6 +16,7 @@ Flask-RQ==0.2
 Flask-Script==2.0.6
 Flask-SQLAlchemy==2.3.2
 Flask-SSLify==0.1.5
+Flask-Uploads==0.2.1
 Flask-WTF==0.14.2
 gunicorn==19.7.1
 honcho==1.0.1
@@ -42,3 +44,4 @@ urllib3==1.22
 webassets==0.12.1
 Werkzeug==0.12.2
 WTForms==2.1
+zope.interface==4.4.3

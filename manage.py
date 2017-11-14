@@ -1,5 +1,6 @@
 import os
 import subprocess
+
 from config import Config
 
 from flask_migrate import Migrate, MigrateCommand
@@ -8,7 +9,7 @@ from redis import Redis
 from rq import Connection, Queue, Worker
 
 from app import create_app, db
-from app.models import Role, User, Point
+from app.models import Role, User, Point, Diary, Fit
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
@@ -16,7 +17,7 @@ migrate = Migrate(app, db)
 
 
 def make_shell_context():
-    return dict(app=app, db=db, User=User, Role=Role, Point=Point)
+    return dict(app=app, db=db, User=User, Role=Role, Point=Point, Diary=Diary, Fit=Fit)
 
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
