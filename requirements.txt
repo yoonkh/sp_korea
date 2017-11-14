@@ -18,6 +18,7 @@ Flask-SSLify==0.1.5
 Flask-WTF==0.14.2
 gunicorn==19.7.1
 honcho==1.0.1
+iamport-rest-client==0.6.0
 idna==2.6
 itsdangerous==0.24
 Jinja2==2.9.6

@@ -1,12 +1,14 @@
-from flask import flash, redirect, render_template, request, url_for
+import time
+from flask import flash, redirect, render_template, request, url_for, current_app, jsonify
 from flask_login import (current_user, login_required, login_user,
                          logout_user)
 from flask_rq import get_queue
+from iamport import Iamport
 
 from . import account
 from .. import db
 from ..email import send_email
-from ..models import User
+from ..models import User, Point
 from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
                     LoginForm, RegistrationForm, RequestResetPasswordForm,
                     ResetPasswordForm)
@@ -78,32 +80,15 @@ def manage_point():
     return render_template('account/manage.html', user=current_user, form=None)
 
 
-@account.route('/manage/payment')
-@login_required
+@account.route('/manage/payment', methods=['GET', 'POST'])
 def manage_payment():
-    """PG사 페이지내 결제 이후, 결제여부 체크 및 금액 변조확인
-    의사 코딩:  https://github.com/iamport/iamport-manual/blob/master/%EC%9D%B8%EC%A6%9D%EA%B2%B0%EC%A0%9C/README.md
-    imp_uid = extract_POST_value_from_url('imp_uid') //post ajax request로부터 imp_uid확인
-
-    payment_result = rest_api_to_find_payment(imp_uid) //imp_uid로 아임포트로부터 결제정보 조회
-    amount_to_be_paid = query_amount_to_be_paid(payment_result.merchant_uid) //결제되었어야 하는 금액 조회. 가맹점에서는 merchant_uid기준으로 관리
-
-    IF payment_result.status == 'paid' AND payment_result.amount == amount_to_be_paid
-        success_post_process(payment_result) //결제까지 성공적으로 완료
-    ELSE IF payment_result.status == 'ready' AND payment.pay_method == 'vbank'
-        vbank_number_assigned(payment_result) //가상계좌 발급성공
-    ELSE
-        fail_post_process(payment_result) //결제실패 처리
-    """
-    imp_uid = request.args.get('imp_uid')
-    merchant_uid = request.args.get('merchant_uid')
-    true_or_false = request.args.get('imp_success')
-    print('====== Result =====')
-    print(imp_uid)
-    print(merchant_uid)
-    print(true_or_false)
-    print('===================')
-    return redirect(url_for('account.manage_point'))
+    iamport_api = Iamport(imp_key=current_app.config['IMP_KEY'], imp_secret=current_app.config['IMP_SECRET'])
+    # result = iamport_api.is_paid(request.args.get('amount', 0), imp_uid=request.args.get('imp_uid', None))
+    point = Point(user_id=current_user.id, amount=request.args.get('amount', 100))
+    db.session.add(point)
+    db.session.commit()
+    return jsonify({'data': render_template('account/email/success_form.html', code=302)})
+    # return jsonify({'data': render_template('account/email/fail_form.html', code=404)})
 
 
 @account.route('/reset-password', methods=['GET', 'POST'])
