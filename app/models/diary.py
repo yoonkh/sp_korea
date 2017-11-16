@@ -1,155 +1,66 @@
 from datetime import datetime
 
-from flask_wtf.file import FileRequired, FileField
-from wtforms import SelectField
 from app import db
-
-diary_users = db.Table('diary_users',
-                       db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-                       db.Column('diary_id', db.Integer, db.ForeignKey('diary.id')),
-                       db.Column('food_id', db.Integer, db.ForeignKey('food.id')),
-                       db.Column('water_id', db.Integer, db.ForeignKey('water.id')),
-                       db.Column('sleep_id', db.Integer, db.ForeignKey('sleep.id')),
-                       db.Column('health_id', db.Integer, db.ForeignKey('health.id')),
-                       db.Column('etc_id', db.Integer, db.ForeignKey('etc.id')), )
 
 
 class Diary(db.Model):
+    __tablename__ = 'diarys'
     id = db.Column(db.Integer, primary_key=True)
-    # title = db.Column(db.String(255))
-
-    # 운동일지 다이어리
-
-    # 운동 1,2,3,4
-    exe_per_day = db.Column(db.String(10))
-    # 운동종류 입력
-    exe_per_day_type = db.Column(db.String(10))
-    # 횟수 입력
-    rep = db.Column(db.String(10))
-
-    # 운동사진 업로드필드
-    exe_photo = FileField(validators=[FileRequired()])
-
-    # 운동이름 입력
-    exe_name = db.Column(db.String(10))
-    # 소모 칼로리 입력
-    exe_kcal = db.Column(db.String(10))
-    # 운동 시간 입력
-    exe_time = db.Column(db.String(10))
-
-    # gif 페이지 메모
-
-    exe_memo = db.Column(db.String(255))
-
-    # ... 기타 필드 추가
-
-    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-
-    users = db.relationship("User", secondary="diary_users", backref=db.backref('diarys'))
+    datetime = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
+    food_id = db.Column(db.Integer, db.ForeignKey('foods.id'))
+    water_id = db.Column(db.Integer, db.ForeignKey('waters.id'))
+    sleep_id = db.Column(db.Integer, db.ForeignKey('sleeps.id'))
+    health_id = db.Column(db.Integer, db.ForeignKey('healths.id'))
+    etc_id = db.Column(db.Integer, db.ForeignKey('etcs.id'))
 
 
-# 식단일지입니다
+class Exercise(db.Model):
+    __tablename__ = 'exercises'
+    id = db.Column(db.Integer, primary_key=True)
+    exe_type = db.Column(db.String(10))  # 운동종류
+    rep = db.Column(db.String(10))  # 횟수
+    diary_id = db.relationship('Diary', backref='exercise', lazy='dynamic')
+
 
 class Food(db.Model):
+    __tablename__ = 'foods'
     id = db.Column(db.Integer, primary_key=True)
-
-    # 식단 (음식) 종류
-    breakfast_food_type = db.Column(db.String(10))
-    lunch_food_type = db.Column(db.String(10))
-    dinner_food_type = db.Column(db.String(10))
-    snack_food_type = db.Column(db.String(10))
-    etc_food_type = db.Column(db.String(10))
-
-    # 식단 칼로리 입력
-    kcal_food = db.Column(db.String(10))
-
-    # 식단사진 업로드필드
-    photo_food = FileField(validators=[FileRequired()])
-
-    # 음식 이름 입력
-    food_name = db.Column(db.String(10))
-
-    # 음식 칼로리 입력
-    food_kcal = db.Column(db.String(10))
-
-    # 식사선택 select field
-    food_select = SelectField('음식종류')
-
-    # 음식 메모 입력란
-    food_memo = db.Column(db.String(255))
-
-    # ... 기타 필드 추가
-
-    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-
-    users = db.relationship("User", secondary="diary_users", backref=db.backref('foods'))
+    fullness = db.Column(db.Integer, default=0)  # 배부름 정도
+    diary_id = db.relationship('Diary', backref='food', lazy='dynamic')
 
 
 class Water(db.Model):
+    __tablename__ = 'waters'
     id = db.Column(db.Integer, primary_key=True)
-    # 물 종류
-    water_type = db.Column(db.String(10))
-    # 물 이름 입력
-    water_type_name = db.Column(db.String(10))
-    # 물 용량 입력
-    water_ml = db.Column(db.String(10))
-
-    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-
-    users = db.relationship("User", secondary="diary_users", backref=db.backref('waters'))
+    cup = db.Column(db.Integer, default=0)
+    diary_id = db.relationship('Diary', backref='water', lazy='dynamic')
 
 
 class Sleep(db.Model):
+    __tablename__ = 'sleeps'
     id = db.Column(db.Integer, primary_key=True)
-
-    # 수면시간 입력필드입니다
-    sleep_time = db.Column(db.String(10))
-
-    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-
-    users = db.relationship("User", secondary="diary_users", backref=db.backref('sleeps'))
+    sleep_time = db.Column(db.Integer)  # 수면시간
+    diary_id = db.relationship('Diary', backref='sleep', lazy='dynamic')
 
 
 class Health(db.Model):
+    __tablename__ = 'healths'
     id = db.Column(db.Integer, primary_key=True)
-
-    # 혈압 - select field
-    blood_pressure = SelectField('혈압')
-    # 혈당 - select field
-    blood_sugar = SelectField('혈당')
-    # 심리 - select field
-    mind = SelectField('심리')
-
-    # 혈압 입력
-    blood_pressure_mmhg = db.Column(db.String(10))
-    # 혈당 입력
-    blood_suger_mddl = db.Column(db.String(10))
-    # 심리 입력
-    mind_mg_dl = db.Column(db.String(10))
-
-    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-
-    users = db.relationship("User", secondary="diary_users", backref=db.backref('healths'))
+    blood_pressure_mmhg = db.Column(db.Integer())  # 혈압
+    blood_suger_mddl = db.Column(db.Integer())  # 혈당
+    mind_mg_dl = db.Column(db.Integer())  # 심리
+    diary_id = db.relationship('Diary', backref='health', lazy='dynamic')
 
 
 class Etc(db.Model):
+    __tablename__ = 'etcs'
     id = db.Column(db.Integer, primary_key=True)
-    # 체중 입력
-    weight = db.Column(db.String(10))
-    # 체지방 입력
-    fat = db.Column(db.String(10))
-    # 골격근 입력
-    skeletal_muscle = db.Column(db.String(10))
-
-    # 흡연 - select field
-    smoke = SelectField('흡연')
-
-    # 음주 - select field
-    alcohol = SelectField('음주')
-
-    # 배변 - select field
-    bowel = SelectField('배변')
-
-    create_dttm = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-
-    user = db.relationship("User", secondary="diary_users", backref=db.backref('etcs'))
+    weight = db.Column(db.Integer())  # 체중
+    fat = db.Column(db.Integer())  # 체지방
+    skeletal_muscle = db.Column(db.Integer())  # 골격근
+    smoke = db.Column(db.String(16))  # 흡연
+    alcohol = db.Column(db.String(16))  # 음주
+    bowel = db.Column(db.String(32))  # 배변
+    diary_id = db.relationship('Diary', backref='etc', lazy='dynamic')

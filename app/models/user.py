@@ -46,20 +46,18 @@ class Role(db.Model):
 
 
 class User(UserMixin, db.Model):
-    # __tablename__ = 'users'
-
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     confirmed = db.Column(db.Boolean, default=False)
-    username = db.Column(db.String(64), index=True, nullable=False)
-    # last_name = db.Column(db.String(64), index=True) 네임필드 변경
+    first_name = db.Column(db.String(64), index=True)
+    last_name = db.Column(db.String(64), index=True)
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    # 외래 키 참조
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    # 외래 키
     points = db.relationship('Point', backref='user', lazy='dynamic')
-
-    create_dttm = db.Column(db.DateTime, nullable=False)
-
-    # diarys = relationship("Diary", secondary="diary_users")
+    diarys = db.relationship('Diary', backref='user', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -71,11 +69,11 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(default=True).first()
 
     def full_name(self):
-        return '%s' % (self.username)
+        return '%s %s' % (self.first_name, self.last_name)
 
     def can(self, permissions):
         return self.role is not None and \
-               (self.role.permissions & permissions) == permissions
+            (self.role.permissions & permissions) == permissions
 
     def is_admin(self):
         return self.can(Permission.ADMINISTER)
@@ -173,11 +171,10 @@ class User(UserMixin, db.Model):
         seed()
         for i in range(count):
             u = User(
-                username=fake.username(),
-                # last_name=fake.last_name(),
+                first_name=fake.first_name(),
+                last_name=fake.last_name(),
                 email=fake.email(),
                 password='password',
-                create_dttm=fake.DateTime(),
                 confirmed=True,
                 role=choice(roles),
                 **kwargs)
