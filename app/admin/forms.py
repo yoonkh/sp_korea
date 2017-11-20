@@ -1,15 +1,15 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import ValidationError
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from wtforms.fields import PasswordField, StringField, SubmitField
+from wtforms.fields import PasswordField, StringField, SubmitField, DateTimeField, IntegerField, TextAreaField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import Email, EqualTo, InputRequired, Length
+from wtforms.validators import Email, EqualTo, InputRequired, Length, DataRequired
 
 from .. import db
 from ..models import Role, User
 
 
-class ChangeUserEmailForm(Form):
+class ChangeUserEmailForm(FlaskForm):
     email = EmailField(
         'New email', validators=[InputRequired(), Length(1, 64), Email()])
     submit = SubmitField('Update email')
@@ -19,7 +19,7 @@ class ChangeUserEmailForm(Form):
             raise ValidationError('Email already registered.')
 
 
-class ChangeAccountTypeForm(Form):
+class ChangeAccountTypeForm(FlaskForm):
     role = QuerySelectField(
         'New account type',
         validators=[InputRequired()],
@@ -28,7 +28,7 @@ class ChangeAccountTypeForm(Form):
     submit = SubmitField('Update role')
 
 
-class InviteUserForm(Form):
+class InviteUserForm(FlaskForm):
     role = QuerySelectField(
         'Account type',
         validators=[InputRequired()],
@@ -56,3 +56,23 @@ class NewUserForm(InviteUserForm):
     password2 = PasswordField('Confirm password', validators=[InputRequired()])
 
     submit = SubmitField('Create')
+
+
+class NewVideoForm(FlaskForm):
+    name = StringField('이름', validators=[DataRequired(), Length(1, 128)])
+    running_time_min = IntegerField('분', validators=[DataRequired()])
+    running_time_sec = IntegerField('초', validators=[DataRequired()])
+    price = IntegerField('가격', validators=[DataRequired()])
+    company = StringField('제공 업체', validators=[DataRequired(), Length(1, 32)])
+    tags = StringField('태그', validators=[DataRequired()])
+    link = StringField('링크', validators=[DataRequired()])
+    description = TextAreaField('설명')
+    submit = SubmitField('생성')
+
+    def validate_running_time_sec(self, field):
+        if int(field.data) >= 60:
+            raise ValidationError('60초를 초과할수 없습니다.')
+
+    def validate_running_time_min(self, field):
+        if int(field.data) >= 60:
+            raise ValidationError('60분을 초과할수 없습니다.')

@@ -18,18 +18,18 @@
     } %}
 
     {{ begin_form(form, flashes, method=method, extra_classes=extra_classes, enctype=enctype) }}
-        {% for field in form if not (is_hidden_field(field) or field.type == 'SubmitField') %}
-            {{ render_form_field(field) }}
-        {% endfor %}
+    {% for field in form if not (is_hidden_field(field) or field.type == 'SubmitField') %}
+        {{ render_form_field(field) }}
+    {% endfor %}
 
-        {{ form_message(flashes['error'], header='Something went wrong.', class='error') }}
-        {{ form_message(flashes['warning'], header='Check your email.', class='warning') }}
-        {{ form_message(flashes['info'], header='Information', class='info') }}
-        {{ form_message(flashes['success'], header='Success!', class='success') }}
+    {{ form_message(flashes['error'], header='Something went wrong.', class='error') }}
+    {{ form_message(flashes['warning'], header='Check your email.', class='warning') }}
+    {{ form_message(flashes['info'], header='Information', class='info') }}
+    {{ form_message(flashes['success'], header='Success!', class='success') }}
 
-        {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-            {{ render_form_field(field) }}
-        {% endfor %}
+    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
+        {{ render_form_field(field) }}
+    {% endfor %}
 
     {{ end_form(form) }}
 {% endmacro %}
@@ -109,11 +109,17 @@
         {{ render_form(field) }}
     {% else %}
         {{ field.label }}
-            {% if field.description %}
-                <div class="ui pointing below label">
-                    {{ field.description }}
-                </div>
-            {% endif %}
-        {{ field(placeholder=field.label.text) }}
+        {% if field.description %}
+            <div class="ui pointing below label">
+                {{ field.description }}
+            </div>
+        {% endif %}
+        {% if field.type == 'IntegerField' %}
+            {{ field(placeholder=field.label.text, type='number', **kwargs) }}
+        {% elif field.type == 'DateTimeField'%}
+            {{ field(placeholder=field.label.text, type='time', **kwargs) }}
+        {% else %}
+            {{ field(placeholder=field.label.text) }}
+        {% endif %}
     {% endif %}
 {% endmacro %}

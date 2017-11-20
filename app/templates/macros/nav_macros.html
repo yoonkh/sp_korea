@@ -25,7 +25,7 @@
       ('main.about', 'About', 'info')
     ]%}
     {% set user = [] %}
-    {% if current_user.is_authenticated %}
+    {% if current_user.is_admin() %}
       {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
     {% endif %} 
     {{ render_menu_items( endpoints +  user ) }}
@@ -37,14 +37,14 @@
 {% macro account_items(current_user) %}
     {% if current_user.is_authenticated %}
       {% set endpoints = [
-        ('account.manage', 'Your Account', 'settings'),
-        ('account.logout', 'Log out', 'sign out')
+        ('account.manage', '내 계정', 'settings'),
+        ('account.logout', '로그아웃', 'sign out')
       ] %}
       {{ render_menu_items(endpoints) }}
     {% else %}
       {% set endpoints = [
-        ('account.register', 'Register', 'list layout'),
-        ('account.login', 'Log In', 'sign in')
+        ('account.register', '회원가입', 'list layout'),
+        ('account.login', '로그인', 'sign in')
       ] %}
       {{ render_menu_items(endpoints) }}
     {% endif %}

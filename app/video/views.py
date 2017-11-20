@@ -1,8 +1,15 @@
-from flask import request, json, render_template
+from flask import render_template
 
+from ..models import Video
 from . import video
 
 
 @video.route('/')
 def index():
-    return render_template("diary/video_page.html")
+    videos = Video.query.all()
+    return render_template("video/video_list.html", videos=videos)
+
+
+@video.route('/detail/<int:video_num>')
+def video_detail(video_num):
+    return render_template("video/video_page.html")

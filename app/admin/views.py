@@ -1,14 +1,15 @@
+import datetime
+
 from flask import abort, flash, redirect, render_template, url_for, request
 from flask_login import current_user, login_required
 from flask_rq import get_queue
 
-from .forms import (ChangeAccountTypeForm, ChangeUserEmailForm, InviteUserForm,
-                    NewUserForm)
+from .forms import ChangeAccountTypeForm, ChangeUserEmailForm, InviteUserForm, NewUserForm, NewVideoForm
 from . import admin
 from .. import db
 from ..decorators import admin_required
 from ..email import send_email
-from ..models import Role, User, EditableHTML
+from ..models import Role, User, EditableHTML, Video, VideoTag
 
 
 @admin.route('/')
@@ -161,6 +162,35 @@ def delete_user(user_id):
         db.session.commit()
         flash('Successfully deleted user %s.' % user.full_name(), 'success')
     return redirect(url_for('admin.registered_users'))
+
+
+@admin.route('/new-video', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_video():
+    """Create a new video"""
+    form = NewVideoForm()
+    if form.validate_on_submit():
+        # check is tag exist
+        tags = VideoTag.check_and_add_tags(form.tags.data)
+        running_time = datetime.datetime.now().replace(minute=form.running_time_min.data,
+                                                       second=form.running_time_sec.data)
+        video = Video(
+            name=form.name.data,
+            running_time=running_time,
+            price=form.price.data,
+            company=form.company.data,
+            description=form.description.data,
+            link=form.link.data)
+        db.session.add(video)
+        db.session.commit()
+        for tag in tags:
+            video.tags.append(tag)
+        db.session.add(video)
+        db.session.commit()
+        flash('Video {}가 등록되었습니다.'.format(form.name.data),
+              'form-success')
+    return render_template('admin/new_video.html', form=form)
 
 
 @admin.route('/_update_editor_contents', methods=['POST'])

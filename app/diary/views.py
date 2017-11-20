@@ -163,12 +163,6 @@ def diary_view_myreview():
     return render_template('diary/myreview_page.html', form=form)
 
 
-@diary.route('/video', methods=['GET', 'POST'])
-def diary_view_video():
-    form = VideoForm()
-    return render_template('diary/video_page.html', form=form)
-
-
 @diary.route('/tag', methods=['GET', 'POST'])
 def diary_view_tag():
     form = TagForm()

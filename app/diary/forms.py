@@ -1,6 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import FileField, SubmitField, IntegerField, StringField, TextAreaField, SelectField, SelectMultipleField
-from wtforms.validators import InputRequired
+from wtforms import FileField, SubmitField, IntegerField, StringField, SelectField
 
 
 class DiaryForm(FlaskForm):
@@ -112,7 +111,6 @@ class VideoForm(FlaskForm):
 
 class TagForm(FlaskForm):
     search = StringField('검색창')
-
 
 
 class ProfileForm(FlaskForm):

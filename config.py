@@ -16,7 +16,7 @@ if os.path.exists('config.env'):
 
 
 class Config:
-    APP_NAME = 'Go-exercise'
+    APP_NAME = '운동하러가자'
     if os.environ.get('SECRET_KEY'):
         SECRET_KEY = os.environ.get('SECRET_KEY')
     else:
