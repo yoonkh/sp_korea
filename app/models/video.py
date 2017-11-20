@@ -24,6 +24,9 @@ class VideoTag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(16), unique=True)
 
+    def __repr__(self):
+        return '#%s' % self.name
+
     @staticmethod
     def check_and_add_tags(tag_list):
         """ 각 태그들을 분리하고, db에 있는지 확인 한뒤, 태그들의 아이디 값을 리턴한다."""

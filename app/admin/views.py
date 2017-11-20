@@ -20,6 +20,7 @@ def index():
     return render_template('admin/index.html')
 
 
+# =========================== USER ===========================
 @admin.route('/new-user', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -164,6 +165,7 @@ def delete_user(user_id):
     return redirect(url_for('admin.registered_users'))
 
 
+# =========================== VIDEO ===========================
 @admin.route('/new-video', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -173,8 +175,8 @@ def new_video():
     if form.validate_on_submit():
         # check is tag exist
         tags = VideoTag.check_and_add_tags(form.tags.data)
-        running_time = datetime.datetime.now().replace(minute=form.running_time_min.data,
-                                                       second=form.running_time_sec.data)
+        running_time = datetime.datetime.now().replace(minute=form.running_time_min.data or 0,
+                                                       second=form.running_time_sec.data or 0)
         video = Video(
             name=form.name.data,
             running_time=running_time,
@@ -193,12 +195,76 @@ def new_video():
     return render_template('admin/new_video.html', form=form)
 
 
+@admin.route('/videos')
+@login_required
+@admin_required
+def registered_videos():
+    """View all registered videos."""
+    videos = Video.query.all()
+    tags = VideoTag.query.all()
+    return render_template(
+        'admin/registered_videos.html', videos=videos, tags=tags)
+
+
+@admin.route('/video/<int:video_id>')
+@admin.route('/video/<int:video_id>/info')
+@login_required
+@admin_required
+def video_info(video_id):
+    """View a video's profile."""
+    video = Video.query.filter_by(id=video_id).first()
+    if video is None:
+        abort(404)
+    return render_template('admin/manage_video.html', video=video)
+
+
+@admin.route(
+    '/video/<int:video_id>/change-video-info', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def change_video_info(video_id):
+    """Change a video's information."""
+    video = Video.query.get(video_id)
+    if video is None:
+        abort(404)
+    form = NewVideoForm()
+    if form.validate_on_submit():
+        # change video info
+        db.session.add(video)
+        db.session.commit()
+        flash('Video {}\'s info successfully changed.'
+              .format(video.name), 'form-success')
+    return render_template('admin/manage_video.html', video=video, form=form)
+
+
+@admin.route('/video/<int:video_id>/delete')
+@login_required
+@admin_required
+def delete_video_request(video_id):
+    """Request deletion of a video's account."""
+    video = Video.query.filter_by(id=video_id).first()
+    if video is None:
+        abort(404)
+    return render_template('admin/manage_video.html', video=video)
+
+
+@admin.route('/video/<int:video_id>/_delete')
+@login_required
+@admin_required
+def delete_video(video_id):
+    """Delete a user's account."""
+    video = Video.query.filter_by(id=video_id).first()
+    db.session.delete(video)
+    db.session.commit()
+    flash('Successfully deleted video %s.' % video.name, 'success')
+    return redirect(url_for('admin.registered_videos'))
+
+
 @admin.route('/_update_editor_contents', methods=['POST'])
 @login_required
 @admin_required
 def update_editor_contents():
     """Update the contents of an editor."""
-
     edit_data = request.form.get('edit_data')
     editor_name = request.form.get('editor_name')
 

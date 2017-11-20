@@ -3,7 +3,7 @@ from wtforms import ValidationError
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.fields import PasswordField, StringField, SubmitField, DateTimeField, IntegerField, TextAreaField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import Email, EqualTo, InputRequired, Length, DataRequired
+from wtforms.validators import Email, EqualTo, InputRequired, Length, DataRequired, AnyOf
 
 from .. import db
 from ..models import Role, User
@@ -60,9 +60,9 @@ class NewUserForm(InviteUserForm):
 
 class NewVideoForm(FlaskForm):
     name = StringField('이름', validators=[DataRequired(), Length(1, 128)])
-    running_time_min = IntegerField('분', validators=[DataRequired()])
-    running_time_sec = IntegerField('초', validators=[DataRequired()])
-    price = IntegerField('가격', validators=[DataRequired()])
+    running_time_min = IntegerField('분')
+    running_time_sec = IntegerField('초')
+    price = IntegerField('가격')
     company = StringField('제공 업체', validators=[DataRequired(), Length(1, 32)])
     tags = StringField('태그', validators=[DataRequired()])
     link = StringField('링크', validators=[DataRequired()])
