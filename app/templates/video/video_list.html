@@ -21,8 +21,9 @@
     <div class="top-container">맞춤형 영상 추천</div>
 </div>
 
-<div class="video_list"  style="margin-top: 50px;">
+<div class="video_list" style="margin-top: 50px;">
     <table class="table table-striped table-hover">
+        <thead>
         <tr>
             <th>이름</th>
             <th>길이</th>
@@ -30,15 +31,18 @@
             <th>태그</th>
             <th>제공 업체</th>
         </tr>
-        <tr>
-            {% for video in videos %}
+        </thead>
+        <tbody>
+        {% for video in videos %}
+            <tr onclick="window.location.href = '{{ url_for('video.video_info', video_id=video.id) }}';">
                 <td>{{ video.name }}</td>
-                <td>{{ video.running_time }}</td>
+                <td>{{ video.running_time.minute }}:{{ video.running_time.second }}</td>
                 <td>{{ video.price }}</td>
                 <td>{{ video.tags }}</td>
                 <td>{{ video.company }}</td>
-            {% endfor %}
-        </tr>
+            </tr>
+        {% endfor %}
+        </tbody>
     </table>
 </div>
 {% if form %}

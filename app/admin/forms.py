@@ -67,7 +67,7 @@ class NewVideoForm(FlaskForm):
     tags = StringField('태그', validators=[DataRequired()])
     link = StringField('링크', validators=[DataRequired()])
     description = TextAreaField('설명')
-    submit = SubmitField('생성')
+    submit = SubmitField('등록')
 
     def validate_running_time_sec(self, field):
         if int(field.data) >= 60:

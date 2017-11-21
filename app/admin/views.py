@@ -173,25 +173,12 @@ def new_video():
     """Create a new video"""
     form = NewVideoForm()
     if form.validate_on_submit():
-        # check is tag exist
-        tags = VideoTag.check_and_add_tags(form.tags.data)
         running_time = datetime.datetime.now().replace(minute=form.running_time_min.data or 0,
                                                        second=form.running_time_sec.data or 0)
-        video = Video(
-            name=form.name.data,
-            running_time=running_time,
-            price=form.price.data,
-            company=form.company.data,
-            description=form.description.data,
-            link=form.link.data)
-        db.session.add(video)
-        db.session.commit()
-        for tag in tags:
-            video.tags.append(tag)
-        db.session.add(video)
-        db.session.commit()
-        flash('Video {}가 등록되었습니다.'.format(form.name.data),
-              'form-success')
+        video = Video(name=form.name.data, running_time=running_time, price=form.price.data,
+                      company=form.company.data, description=form.description.data, link=form.link.data)
+        video.set_tags(form.tags.data)
+        flash('Video {}가 등록되었습니다.'.format(form.name.data), 'form-success')
     return render_template('admin/new_video.html', form=form)
 
 
@@ -218,8 +205,7 @@ def video_info(video_id):
     return render_template('admin/manage_video.html', video=video)
 
 
-@admin.route(
-    '/video/<int:video_id>/change-video-info', methods=['GET', 'POST'])
+@admin.route('/video/<int:video_id>/change-video-info', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def change_video_info(video_id):
@@ -229,11 +215,24 @@ def change_video_info(video_id):
         abort(404)
     form = NewVideoForm()
     if form.validate_on_submit():
-        # change video info
-        db.session.add(video)
-        db.session.commit()
-        flash('Video {}\'s info successfully changed.'
-              .format(video.name), 'form-success')
+        running_time = datetime.datetime.now().replace(minute=form.running_time_min.data or 0,
+                                                       second=form.running_time_sec.data or 0)
+        video.name = form.name.data
+        video.running_time = running_time
+        video.price = form.price.data
+        video.company = form.company.data
+        video.link = form.link.data
+        video.description = form.description.data
+        video.set_tags(form.tags.data)
+        flash('Video {}의 정보가 수정되었습니다.'.format(video.name), 'form-success')
+    form.name.data = video.name
+    form.running_time_min.data = video.running_time.minute
+    form.running_time_sec.data = video.running_time.second
+    form.price.data = video.price
+    form.company.data = video.company
+    form.tags.data = video.tags
+    form.link.data = video.link
+    form.description.data = video.description
     return render_template('admin/manage_video.html', video=video, form=form)
 
 

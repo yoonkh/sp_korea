@@ -52,7 +52,6 @@
                     <tbody>
                     {% for v in videos | sort(attribute='name') %}
                         <tr onclick="window.location.href = '{{ url_for('admin.video_info', video_id=v.id) }}';">
-
                             <td>{{ v.name }}</td>
                             <td>{{ v.running_time.strftime('%M:%S') }}</td>
                             <td>{{ v.price }}</td>
