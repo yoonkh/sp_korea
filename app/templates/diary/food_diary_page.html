@@ -1,0 +1,83 @@
+<html lang="ko">
+{% import 'macros/form_macros.html' as f %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../static/css/food_diary_page.css">
+  <link rel="stylesheet" href="../static/css/base.css">
+  <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+  <title>food_diary_page</title>
+</head>
+
+<body>
+  <div id="wrap">
+    <button type="button" class="btn"><a href="#"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span></a></button>
+    <div class="top-container">식단일지</div>
+    <div class="page-header" id="page-header">
+      <h2><input type="date" id="now_date">
+      <script>
+      document.getElementById('now_date').valueAsDate = new Date();
+      </script>
+      </h2>
+    </div>
+
+    <div class="row">
+
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="image">
+      <input type="submit">
+    <div class="col-xs-6 col-md-3" id="photo-height">
+      <a href="#" class="thumbnail">
+        <img src="https://www.impossiblefoods.com/images/home/05_Homepage_News.jpg" alt="" id="photo">
+      </a>
+    </div>
+    </form>
+
+    </div>
+    <div class="bottom-line">
+      <div class="bottom-row">
+
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">음식이름</span>
+          <input type="text" class="form-control" aria-describedby="basic-addon1">
+        </div>
+      <div class="bottom-row2">
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon2">소비칼로리</span>
+          <input type="text" class="form-control" placeholder="Kcal / 시간" aria-describedby="basic-addon2">
+        </div>
+      </div>
+      <div class="bottom_menu">
+      식사 :
+        <ul class="nav nav-pills">
+          <li role="presentation"><a href="#">아침</a></li>
+          <li role="presentation"><a href="#">점심</a></li>
+          <li role="presentation"><a href="#">저녁</a></li>
+          <li role="presentation"><a href="#">간식</a></li>
+        </ul>
+      </div>
+
+      <div class="bottom-memo">
+        <div class="input-group-bottom">
+          <textarea rows="5" cols="45" placeholder="메모"></textarea>
+        </div>
+      </div>
+
+      <div class="b_button" id="main_page_save">
+        <div class="btn-group btn-group-lg" role="group" aria-label="...">
+          <button type="button" class="btn btn-default">저장하기</button>
+        </div>
+      </div>
+
+
+
+      </div>
+    </div>
+  </div>
+</body>
+  {% if form %}
+    {{ f.render_form(form, extra_classes='fluid') }}
+  {% endif %}
+</html>

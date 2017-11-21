@@ -1,0 +1,106 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
+
+{% set endpoints = [
+    ('account.manage', '계정 정보'),
+    ('account.manage_point', '포인트 충전'),
+    ('account.change_email_request', '이메일 주소 변경'),
+    ('account.change_password', '비밀번호 변경'),
+    ('account.logout', '로그아웃')
+] %}
+
+{% macro navigation(items) %}
+    <div class="ui vertical fluid secondary menu">
+        {% for route, name in items %}
+            {% set href = url_for(route) %}
+            <a class="item {% if request.endpoint == route %}active{% endif %}" href="{{ href }}">
+                {{ name }}
+            </a>
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro user_info(user) %}
+    <table class="ui compact definition table">
+        <tr>
+            <td>성명</td>
+            <td>{{ '%s %s' % (user.first_name, user.last_name) }}</td>
+        </tr>
+        <tr>
+            <td>이메일 주소</td>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <td>계정 타입</td>
+            <td>{{ user.role.name }}</td>
+        </tr>
+        <tr>
+            <td>보유 포인트</td>
+            <td>{{ user.total_point }}</td>
+        </tr>
+    </table>
+{% endmacro %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <h2 class="ui header">
+                Account Settings
+                <div class="sub header">Manage your account settings and change your login information.</div>
+            </h2>
+        </div>
+        <div class="stretched divided very relaxed row">
+            <div class="four wide column">
+                {{ navigation(endpoints) }}
+            </div>
+            <div class="eight wide column">
+                {% if request.endpoint == 'account.manage_point' %}
+                    <p>결제 페이지</p>
+                    <script src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"
+                            type="text/javascript"></script>
+                    <script type="text/javascript">
+                        var IMP = window.IMP; // 생략가능
+                        IMP.init('imp63004671'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+                        IMP.request_pay({
+                            pg: 'inicis', // version 1.1.0부터 지원.
+                            pay_method: 'card',
+                            merchant_uid: 'merchant_' + new Date().getTime(),
+                            name: '주문명:결제테스트',
+                            amount: 100,
+                            buyer_email: '{{ user.email }}',
+                            buyer_name: '{{ user.full_name() }}',
+                            buyer_tel: '',
+                            m_redirect_url: '{{ url_for('account.manage_payment') }}'
+                        }, function (rsp) {
+                            if (rsp.success) {
+                                var msg = '';
+                                //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
+                                var ajax = $.ajax({
+                                    url: '/account/manage/payment?imp_uid='+ rsp.imp_uid+'&amount='+rsp.paid_amount
+                                });
+                                ajax.done(function (data) {
+                                    var js_data = data.data;
+                                    msg += js_data;
+                                });
+                                ajax.fail(function (error) {
+                                    msg = '결제에 실패하였습니다. ';
+                                    console.log(error);
+                                });
+                            } else {
+                                var msg = '결제에 실패하였습니다. ';
+                                msg += '에러내용 : ' + rsp.error_msg;
+                            }
+                            alert(msg);
+                        });
+                    </script>
+                {% elif form %}
+                    {{ f.render_form(form, extra_classes='fluid') }}
+                {% else %}
+                    {{ user_info(user) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {{ check.password_check('new_password', 0) }}
+{% endblock %}

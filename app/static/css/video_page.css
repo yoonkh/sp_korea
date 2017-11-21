@@ -1,0 +1,22 @@
+/*video_page.css*/
+#date_header {
+  margin: 0px;
+  padding: 0px;
+}
+
+#video_youtube {
+  height: 70%;
+}
+.video_list {
+  font-size: smaller;
+}
+.video_list > h3 {
+  margin-left: 15px;
+  font-size: 18px;
+}
+.video_list > .list_group > a {
+  padding: 7px 20px;
+}
+.video_content {
+  height: 200px
+}

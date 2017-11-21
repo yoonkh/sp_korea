@@ -1,0 +1,18 @@
+{% block page_content %}
+<strong class="tlt_question">나는 음식을 먹을 때, 소금이나 간장을</strong>
+<div class="item_vote">
+    <a class="link_item link_left" onclick='next("A", 5)'>
+            <span class="txt_item">항상 더 넣는다</span>
+        </a>
+    <a class="link_item link_right" onclick='next("B", 5)'>
+            <span class="txt_item">자주 더 넣는다</span>
+        </a>
+</div>
+<div class="item_vote">
+    <a class="link_item link_left" onclick='next("C", 5)'>
+            <span class="txt_item">거의 더 넣지 않는다</span>
+        </a>
+    <a class="link_item link_right" onclick='next("D", 5)'>
+                <span class="txt_item">전혀 더 넣지 않는다</span>
+            </a>
+</div>{% endblock %}

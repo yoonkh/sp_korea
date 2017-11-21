@@ -1,0 +1,15 @@
+{% block page_content %}
+<strong class="tlt_question">해당하는 내용이 있다면 알려주세요 만약 없다면 바로 결과보기 버튼을 눌러주세요.</strong>
+<div class="item_vote">
+    <form>
+        <div class="form-group">
+            <label for="sick">성인병</label>
+            <input type="text" class="form-control" id="sick" placeholder="고혈압, 당뇨병, 고지혈증, 협심증 등">
+        </div>
+        <div class="form-group">
+            <label for="med">약물 복용</label>
+            <input type="text" class="form-control" id="med" placeholder="복용중인 약물이 있을 경우">
+        </div>
+        <a onclick='next("A", 7)' class="survey_start clearfix">결과보기</a>
+    </form>
+</div>{% endblock %}

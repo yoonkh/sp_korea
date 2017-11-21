@@ -1,0 +1,66 @@
+/*main_page_css*/
+#wrap {
+  margin-top: 30px;
+}
+
+.page-header > h2 {
+  margin: 0;
+}
+
+.thumbnail {
+  margin: 0 10px 0 20px;
+  height: 180px;
+  width: 200px;
+}
+
+#photo {
+  height: 170px;
+}
+
+#photo-height {
+  height: 185px;
+}
+
+.f_name {
+  clear: both;
+  margin: 180px 170px 20px 100px;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.input-group > input.form-control {
+  width: 50%;
+}
+
+#basic-addon1 {
+  padding: 0 18px;
+
+}
+
+.bottom-row2 {
+  margin-top: 15px;
+}
+
+.bottom-line {
+  margin-left: 20px;
+}
+
+#main_page_save {
+  margin-left: 110px;
+}
+
+
+.bottom_menu {
+  margin: 20px 0 0 55px;
+}
+
+ul.nav-pills > li > a {
+  position: relative;
+  right: -50px;
+  top: -25px;
+  padding: 5px 8px;
+}
+
+.input-group-bottom > textarea {
+  width: 94%;
+}

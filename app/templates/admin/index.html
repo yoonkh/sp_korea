@@ -1,0 +1,43 @@
+{% extends 'layouts/base.html' %}
+
+{% macro dashboard_option(title, endpoint, description=None, icon=None) %}
+    <a class="column" href="{{ url_for(endpoint) }}">
+        <div class="ui padded segment">
+            <h3 class="ui header">
+                {% if icon is not none %}
+                    <i class="{{ icon }}"></i>
+                {% endif %}
+                <div class="content">
+                    {{ title }}
+                    {% if description is not none %}
+                        <div class="sub header">
+                            {{ description }}
+                        </div>
+                    {% endif %}
+                </div>
+            </h3>
+        </div>
+    </a>
+{% endmacro %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <h2 class="ui header">
+                Admin Dashboard
+            </h2>
+            <div class="ui two column stackable grid">
+                {{ dashboard_option('Registered Users', 'admin.registered_users',
+                                    description='기존 유저 열람 및 관리', icon='users icon') }}
+                {{ dashboard_option('Add New User', 'admin.new_user',
+                                    description='새 계정 생성', icon='add user icon') }}
+                {{ dashboard_option('Invite New User', 'admin.invite_user',
+                                    description='새로운 유저를 초청하여 계정 생성', icon='add user icon') }}
+                {{ dashboard_option('Registered Videos', 'admin.registered_videos',
+                                    description='기존 비디오 열람 및 관리', icon='video play icon') }}
+                {{ dashboard_option('Add Video', 'admin.new_video',
+                                    description='새로운 비디오 생성', icon='video play icon') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

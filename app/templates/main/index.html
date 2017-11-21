@@ -1,0 +1,22 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <img class="ui fluid image" src="{{ url_for('static', filename='images/main_image.jpg') }}" style="margin-bottom: 10px;">
+    <div class="ui text container">
+        <h1>Hello {% if not (current_user.is_authenticated) %} stranger {% else %}
+            {{ current_user.full_name() }} {% endif %},</h1>
+
+        <p>여기는 <a href=http://www.goactivity.co.kr/">운동하러 가자</a>의 새로운 사이트입니다.</p>
+    </div>
+    <div class="ui three column grid container text" style="margin-top: 50px;">
+        <div class="column">
+            <a href="{{ url_for('video.index') }}"><p>맞춤형 영상 추천</p></a>
+        </div>
+        <div class="column">
+            <a href="{{ url_for('survey.survey_index') }}"><p>나의 체형은?</p></a>
+        </div>
+        <div class="column">
+            <a href=""><p>운동 일지 기록</p></a>
+        </div>
+    </div>
+{% endblock %}

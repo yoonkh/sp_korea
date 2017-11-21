@@ -1,0 +1,15 @@
+{% block page_content %}
+<strong class="tlt_question">앉았다 일어나기와 무릎꿇고 팔굽혀펴기중 어느 것을 더 많이 하실수 있나요?</strong>
+<div class="item_vote">
+    <a class="link_item link_left" onclick='next("A", 3)'>
+            <span class="txt_item">앉았다 일어나기</span>
+        </a>
+    <a class="link_item link_right" onclick='next("B", 3)'>
+            <span class="txt_item">무릎꿇고 팔굽혀펴기</span>
+        </a>
+</div>
+<div class="item_vote">
+    <a class="link_item link_left" onclick='next("C", 3)'>
+            <span class="txt_item">비슷하다</span>
+        </a>
+</div>{% endblock %}

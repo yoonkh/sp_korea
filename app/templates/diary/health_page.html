@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% import 'macros/form_macros.html' as f %}
+
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../static/css/base.css">
+  <link rel="stylesheet" href="../static/css/health_page.css">
+  <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+  <title>health_page</title>
+</head>
+
+<body>
+  <div class="top-diary">
+    <button type="button" class="btn"><a href="#"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span></a></button>
+    <div class="top-container">운동일지</div>
+    <div class="page-header">
+      <h2><input type="date" id="now_date">
+      <script>
+      document.getElementById('now_date').valueAsDate = new Date();
+      </script>
+      </h2>
+    </div>
+  </div>
+  <div class="middle-tag">
+    <div class="btn-group" role="group" aria-label="...">
+      <button type="button" class="btn btn-default">#해시태그 등록하기</button>
+
+    </div>
+  </div>
+  <div class="middle_menu">
+    <div class="f_1" id="f_num">혈압 :<span><a href="#">수축기</a>/<a href="#">이완기</a></span>
+      <input type="number" name="userid" autocomplete="off" placeholder="mmhg" class="main_input" style='IME-MODE: disabled' id="num">
+
+    </div>
+    <div class="f_2" id="f_num">혈당 :<span><a href="#">공복</a>/<a href="#">식후2시간</a></span>
+      <input type="number" name="userid" autocomplete="off" placeholder="mg/dl" class="main_input" style='IME-MODE: disabled' id="num">
+    </div>
+    <div class="f_3" id="f_num">심리 :<span><a href="#">공복</a>/<a href="#">식후2시간</a></span>
+      <input type="number" name="userid" autocomplete="off" placeholder="mg/dl" class="main_input" style='IME-MODE: disabled' id="num">
+    </div>
+  </div>
+
+  <div class="b_button">
+  <div class="btn-group btn-group-lg" role="group" aria-label="...">
+    <button type="button" class="btn btn-default">저장하기</button>
+  </div>
+  </div>
+
+</body>
+  {% if form %}
+    {{ f.render_form(form, extra_classes='fluid') }}
+  {% endif %}
+</html>

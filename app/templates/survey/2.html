@@ -1,0 +1,27 @@
+{% block page_content %}
+<strong class="tlt_question">당신의 기본 정보를 알려주세요</strong>
+<div class="item_vote">
+    <form>
+        <div class="form-group">
+            <label class="radio-inline"><input type="radio" name="optradio" value="A">남성</label>
+            <label class="radio-inline"><input type="radio" name="optradio" value="B">여성</label>
+        </div>
+        <div class="form-group">
+            <label for="birth">생년월일</label>
+            <input type="date" class="form-control" id="birth" placeholder="yymmdd">
+        </div>
+        <div class="form-group">
+            <label for="height">키</label>
+            <input type="number" class="form-control" id="height" placeholder="예: 1.60(m)">
+        </div>
+        <div class="form-group">
+            <label for="weight">몸무게</label>
+            <input type="number" class="form-control" id="weight" placeholder="예: 80">
+        </div>
+        <div class="form-group">
+                <label for="sleep">하루 수면량</label>
+                <input type="number" class="form-control" id="sleep" placeholder="예: 7">
+            </div>
+        <a onclick='next("A", 2)' class="survey_start clearfix">다음</a>
+    </form>
+</div>{% endblock %}

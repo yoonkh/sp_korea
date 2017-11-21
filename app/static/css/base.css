@@ -1,0 +1,67 @@
+/*base.css*/
+.top-container {
+  text-align: center;
+  font-size: 30px;
+  margin-right: 70px;
+}
+
+.top-container2 {
+  font-size: x-large;
+  margin: 0 0 10px 50px;
+}
+
+.btn {
+  float: left;
+  font-size: 18px;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+#page-header {
+  margin: 0;
+}
+
+#now_date {
+  text-align: center;
+  margin-left: 75px;
+
+}
+
+.top-diary {
+  margin-top: 20px;
+}
+
+.middle-tag {
+  margin: 0 0 20px 115px;
+}
+
+#f_num {
+  margin-left: 50px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#f_num > span {
+  margin-left: 5px;
+}
+
+#f_num > span > a {
+  margin-left: 35px;
+}
+
+.b_button {
+  margin-left: 135px;
+}
+
+#num {
+  width: 70px;
+  position: relative;
+  top: -30px;
+  left: 200px;
+  display: inherit;
+
+}
+
+#f_num > span > input {
+    width: 118px;
+}

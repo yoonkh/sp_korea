@@ -1,0 +1,108 @@
+body, div{
+    margin: 0;
+    padding: 0;
+}
+a{
+    text-decoration: none;
+}
+.clearfix {
+    overflow: auto;
+}
+/* header */
+.survey-header{
+    background-image: url("../images/survey_header.jpeg");
+    margin-bottom: 25px;
+    background-size: cover;
+    height: 190px;
+}
+.survey-header .site-heading{
+    padding: 60px 0 60px;
+    color: #fff;
+    text-align: center;
+}
+.survey-header .site-heading .subheading{
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.1;
+    margin: 10px 0 0;
+}
+#survey-main{
+    height: 248px;
+}
+#survey-main .site-heading{
+    padding: 80px 0 80px;
+    color: #fff;
+}
+/* container */
+.container{
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+.container .survey_start{
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.25;
+    display: inline-block;
+    width: 193px;
+    margin-top: 10px;
+    padding: 10px 10px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    color: white;
+    background-color: deepskyblue;
+    white-space: nowrap;
+    user-select: none;
+    text-decoration: none;
+    touch-action: manipulation;
+}
+.container .survey_start:active{
+    background-color: #0087ff;
+}
+.container strong.tlt_question{
+    display: block;
+    padding: 0 0 15px;
+    text-align: center;
+    color: #444;
+    font-size: 22px;
+    line-height: 27px;
+    letter-spacing: -1px;
+}
+/* answer container */
+.container .item_vote{
+    display: inline-block;
+    overflow: hidden;
+    text-align: center;
+}
+.container .link_item{
+    display: table;
+    float: left;
+    width: 137px;
+    height: 137px;
+    margin-bottom: 10px;
+    border-top-left-radius: 69px;
+    border-top-right-radius: 69px;
+    border-bottom-left-radius: 69px;
+    border-bottom-right-radius: 69px;
+    color: #fff;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+}
+.container .link_left{
+    margin-right: 10px;
+    background-color: #515c9b;
+}
+.container .link_right{
+    background-color: #ef9534;
+}
+.container .item_vote .txt_item{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.top-line {
+    height: 220px;
+    width: 100%;
+}

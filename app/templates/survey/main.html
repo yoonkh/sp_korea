@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+</body>
+</html>
+<div id="wrap">
+    <div class="top-line">
+        <form method="get" id="form" action="">
+            <input type="hidden" name="resCode" id="resCode" value="">
+            <input type="hidden" name="page" id="resObj" value="result">
+        </form>
+
+        <strong class="tlt_question" style="text-align: left">{{result|replace('\n','<br/><br/>')|safe}}</strong>
+
+    </div>
+    <div class="middle-line">내게 맞는 서비스</div>
+    <div class="bottom-line">전문상담, 운동일지</div>
+</div>

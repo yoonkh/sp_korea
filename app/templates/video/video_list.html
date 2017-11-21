@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/nav_macros.html' as nav %}
+
+<html lang="ko">
+<head>
+    {% include 'partials/_head.html' %}
+    <link rel="stylesheet" href="../static/css/video_page.css">
+    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <title>맞춤형 영상 추천</title>
+</head>
+<body>
+{% block nav %}
+    {{ nav.render_nav(current_user) }}
+{% endblock %}
+<div class="top-diary">
+    <button type="button" class="btn"><a href="{{ url_for('main.index') }}">
+        <span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span>
+    </a></button>
+    <div class="top-container">맞춤형 영상 추천</div>
+</div>
+
+<div class="video_list" style="margin-top: 50px;, overflow-x: scroll;">
+    <table class="ui searchable sortable unstackable selectable celled table">
+        <thead>
+        <tr>
+            <th class="sorted ascending">이름</th>
+            <th>길이</th>
+            <th>가격</th>
+            <th>태그</th>
+            <th>제공 업체</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for video in videos | sort(attribute='이름') %}
+            <tr onclick="window.location.href = '{{ url_for('video.video_info', video_id=video.id) }}';">
+                <td>{{ video.name }}</td>
+                <td>{{ video.running_time.minute }}:{{ video.running_time.second }}</td>
+                <td>{{ video.price }}</td>
+                <td class="user role">{{ video.tags }}</td>
+                <td>{{ video.company }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if form %}
+    {{ f.render_form(form, extra_classes='fluid') }}
+{% endif %}
+
+
+</body>
+</html>

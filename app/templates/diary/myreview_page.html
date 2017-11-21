@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% import 'macros/form_macros.html' as f %}
+
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../static/css/myreview_page.css">
+  <link rel="stylesheet" href="../static/css/base.css">
+  <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+  <title>myreview_page</title>
+</head>
+
+<body>
+  <div class="top-diary">
+    <button type="button" class="btn"><a href="#"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span></a></button>
+    <div class="top-container">나의문진</div>
+  </div>
+  <div class="top-diary">
+    <div class="top-container2">분기별(1년에 2번 할 예정)</div>
+  </div>
+
+  <div class="middle-tag">
+    <div class="btn-group" role="group" aria-label="...">
+      <button type="button" class="btn btn-default">#해시태그 등록하기</button>
+    </div>
+  </div>
+
+  <div class="middle_tag_button">
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary btn-lg" id="btn-middle">신체정보</button>
+      </div>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary btn-lg" id="btn-middle">관절기능</button>
+      </div>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary btn-lg" id="btn-middle">기초체력</button>
+      </div>
+    </div>
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary btn-lg" id="btn-middle">체형분석</button>
+      </div>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary btn-lg" id="btn-middle">1RM</button>
+      </div>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary btn-lg" id="btn-middle">VO2max</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="b_button">
+  <div class="btn-group btn-group-lg" role="group" aria-label="...">
+    <button type="button" class="btn btn-default">저장하기</button>
+  </div>
+  </div>
+
+</body>
+  {% if form %}
+    {{ f.render_form(form, extra_classes='fluid') }}
+  {% endif %}
+</html>
