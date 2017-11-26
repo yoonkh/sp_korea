@@ -28,10 +28,5 @@ class Point(db.Model):
             Point.user_id == user_id).group_by(Point.user_id).first()
         return user_info.total_point
 
-    @classmethod
-    def get_points_list(cls, user_id):
-        points = Point.query.filter_by(user_id=user_id).all()
-        return points
-
     def __repr__(self):
         return '%s <Point \'%s\'>' % (self.user, self.amount)

@@ -41,16 +41,17 @@
             </div>
             <div>
                 {{ f.render_form_field(form.tags) }}
+                <p>Youtube 영상 링크 형식: https://www.youtube.com/embed/YOUR_VIDEO_CODE</p>
                 {{ f.render_form_field(form.link) }}
             </div>
             <div style="margin-top: 14px">
                 {{ f.render_form_field(form.description) }}
             </div>
-
+            <div style="margin-top: 10px;">
             {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
                 {{ f.render_form_field(field) }}
             {% endfor %}
-
+            </div>
             {{ f.end_form() }}
             {% if form.password %}
                 {{ check.password_check('password', 0) }}

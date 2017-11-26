@@ -58,6 +58,7 @@ class User(UserMixin, db.Model):
     # 외래 키
     points = db.relationship('Point', backref='user', lazy='dynamic')
     diarys = db.relationship('Diary', backref='user', lazy='dynamic')
+    survey = db.relationship('Survey', backref='user', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -157,6 +158,10 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
         return True
+
+    def get_points_list(self):
+        points = Point.query.filter_by(user_id=self.id).all()
+        return points
 
     @staticmethod
     def generate_fake(count=100, **kwargs):

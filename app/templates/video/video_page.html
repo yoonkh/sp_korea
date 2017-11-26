@@ -1,34 +1,23 @@
-<!DOCTYPE html>
+{% extends 'layouts/base.html' %}
 {% import 'macros/form_macros.html' as f %}
+{% import 'macros/nav_macros.html' as nav %}
 
-<html lang="ko">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>video_page</title>
-</head>
-
-<body>
-<div class="top-diary">
-    <button type="button" class="btn">
-        <a href="#">
-            <span class="glyphicon glyphicon-triangle-left" aria-hidden="true">뒤로</span>
-        </a>
-    </button>
-    <div class="top-container">영상일지</div>
-</div>
-
-<div class="video_content">
-    <div class="embed-responsive embed-responsive-4by3">
-        <iframe class="embed-responsive-item" src="{{ videos.link }}"
-                id="video_youtube"></iframe>
+{% block content %}
+    <div class="ui container">
+        <h1>영상 정보</h1>
+        <p>{{ videos.name }}</p>
     </div>
-</div>
-
-{% if form %}
-    {{ f.render_form(form, extra_classes='fluid') }}
-{% endif %}
-</body>
-</html>
+    <div class="ui container" style="margin-top: 20px;">
+        <div class="ui embed" data-url="{{ videos.link }}"
+             data-placeholder="{{ url_for('static', filename='images/survey_header.jpeg') }}"></div>
+    </div>
+    {% if videos.description %}
+    <div class="ui text container raised segment" style="margin-top: 10px;">
+        <h3>영상 세부 설명</h3>
+        <p>{{ videos.description }}</p>
+    </div>
+    {% endif %}
+    <script type="text/javascript">
+        $('.ui.embed').embed();
+    </script>
+{% endblock %}

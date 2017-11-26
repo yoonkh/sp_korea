@@ -22,6 +22,7 @@
 {% endmacro %}
 
 {% macro user_info(user) %}
+    <h3>기본 정보</h3>
     <table class="ui compact definition table">
         <tr>
             <td>성명</td>
@@ -37,9 +38,94 @@
         </tr>
         <tr>
             <td>보유 포인트</td>
-            <td>{{ user.total_point }}</td>
+            <td>{% if user.total_point %}{{ user.total_point }}{% else %}0{% endif %}</td>
         </tr>
     </table>
+
+    <h3>나의 체형</h3>
+    <p>{{ result }}</p>
+{% endmacro %}
+
+{% macro user_points(user) %}
+    <h3>포인트 충전</h3>
+    <p>보유 포인트: {% if user.total_point %}{{ user.total_point }}{% else %}0{% endif %}원</p>
+    <div>
+        <a href="javascript:imp_pay('10포인트 충전', 10000)">
+            <button class="ui button">
+                10포인트 / 1만원
+            </button>
+        </a>
+        <a href="javascript:imp_pay('20포인트 충전', 20000)">
+            <button class="ui button">
+                21포인트 / 2만원
+            </button>
+        </a>
+    </div>
+    <div style="margin-top: 10px">
+        <a href="javascript:imp_pay('33포인트 충전', 30000)">
+            <button class="ui button">
+                33포인트 / 3만원
+            </button>
+        </a>
+        <a href="javascript:imp_pay('45포인트 충전', 40000)">
+            <button class="ui button">
+                45포인트 / 4만원
+            </button>
+        </a>
+    </div>
+
+    <h3>포인트 사용 내역</h3>
+    {% set points=user.get_points_list() %}
+    {% if points|count > 1 %}
+        <table class="ui compact definition table">
+            {% for point in points %}
+                <tr>
+                    <td>{{ point.datetime }}</td>
+                    <td>{{ point.amount }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    <script src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+        var IMP = window.IMP; // 생략가능
+        IMP.init('imp63004671'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+
+        function imp_pay(name, amount) {
+            IMP.request_pay({
+                pg: 'inicis', // version 1.1.0부터 지원.
+                pay_method: 'card',
+                merchant_uid: 'merchant_' + new Date().getTime(),
+                name: name,
+                amount: amount,
+                buyer_email: '{{ user.email }}',
+                buyer_name: '{{ user.full_name() }}',
+                buyer_tel: '',
+                m_redirect_url: '{{ url_for('account.manage_payment') }}'
+            }, function (rsp) {
+                if (rsp.success) {
+                    var msg = '';
+                    //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
+                    var ajax = $.ajax({
+                        url: '/account/manage/payment?imp_uid=' + rsp.imp_uid + '&amount=' + rsp.paid_amount
+                    });
+                    ajax.done(function (data) {
+                        var js_data = data.data;
+                        msg += js_data;
+                    });
+                    ajax.fail(function (error) {
+                        msg = '결제에 실패하였습니다. ';
+                        console.log(error);
+                    });
+                } else {
+                    var msg = '결제에 실패하였습니다. ';
+                    msg += '에러내용 : ' + rsp.error_msg;
+                }
+                alert(msg);
+            });
+        }
+    </script>
 {% endmacro %}
 
 {% block content %}
@@ -56,44 +142,7 @@
             </div>
             <div class="eight wide column">
                 {% if request.endpoint == 'account.manage_point' %}
-                    <p>결제 페이지</p>
-                    <script src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"
-                            type="text/javascript"></script>
-                    <script type="text/javascript">
-                        var IMP = window.IMP; // 생략가능
-                        IMP.init('imp63004671'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
-                        IMP.request_pay({
-                            pg: 'inicis', // version 1.1.0부터 지원.
-                            pay_method: 'card',
-                            merchant_uid: 'merchant_' + new Date().getTime(),
-                            name: '주문명:결제테스트',
-                            amount: 100,
-                            buyer_email: '{{ user.email }}',
-                            buyer_name: '{{ user.full_name() }}',
-                            buyer_tel: '',
-                            m_redirect_url: '{{ url_for('account.manage_payment') }}'
-                        }, function (rsp) {
-                            if (rsp.success) {
-                                var msg = '';
-                                //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
-                                var ajax = $.ajax({
-                                    url: '/account/manage/payment?imp_uid='+ rsp.imp_uid+'&amount='+rsp.paid_amount
-                                });
-                                ajax.done(function (data) {
-                                    var js_data = data.data;
-                                    msg += js_data;
-                                });
-                                ajax.fail(function (error) {
-                                    msg = '결제에 실패하였습니다. ';
-                                    console.log(error);
-                                });
-                            } else {
-                                var msg = '결제에 실패하였습니다. ';
-                                msg += '에러내용 : ' + rsp.error_msg;
-                            }
-                            alert(msg);
-                        });
-                    </script>
+                    {{ user_points(user) }}
                 {% elif form %}
                     {{ f.render_form(form, extra_classes='fluid') }}
                 {% else %}

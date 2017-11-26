@@ -1,10 +1,12 @@
-import time
 from flask import flash, redirect, render_template, request, url_for, current_app, jsonify
 from flask_login import (current_user, login_required, login_user,
                          logout_user)
 from flask_rq import get_queue
 from iamport import Iamport
+from sqlalchemy import desc
 
+from ..survey.pattern import find_pattern
+from ..models.survey import Survey
 from . import account
 from .. import db
 from ..email import send_email
@@ -70,7 +72,8 @@ def logout():
 @login_required
 def manage():
     """Display a user's account information."""
-    return render_template('account/manage.html', user=current_user, form=None)
+    survey = Survey.query.filter_by(user_id=current_user.id).order_by(desc(Survey.datetime)).first()
+    return render_template('account/manage.html', user=current_user, form=None, result=find_pattern(survey.code))
 
 
 @account.route('/manage/point')
@@ -80,11 +83,12 @@ def manage_point():
     return render_template('account/manage.html', user=current_user, form=None)
 
 
+# 아임포트에서 결제를 재확인해야하는 부분이 생략됨. 추후 추가 필요
 @account.route('/manage/payment', methods=['GET', 'POST'])
 def manage_payment():
     iamport_api = Iamport(imp_key=current_app.config['IMP_KEY'], imp_secret=current_app.config['IMP_SECRET'])
     # result = iamport_api.is_paid(request.args.get('amount', 0), imp_uid=request.args.get('imp_uid', None))
-    point = Point(user_id=current_user.id, amount=request.args.get('amount', 100))
+    point = Point(user_id=current_user.id, amount=request.args.get('amount', 10000))
     db.session.add(point)
     db.session.commit()
     return jsonify({'data': render_template('account/email/success_form.html', code=302)})

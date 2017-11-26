@@ -1,4 +1,6 @@
 {% extends 'survey/base.html' %}
 {% block page_content %}
 <strong class="tlt_question" style="text-align: left">{{result|replace('\n','<br/><br/>')|safe}}</strong>
+    <a href="{{ url_for('main.index') }}"><p style="margin-top: 10px;">메인으로</p></a>
+    <a href="{{ url_for('survey.survey_index') }}">다시하기</a>
 {% endblock %}
