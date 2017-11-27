@@ -59,6 +59,7 @@ class User(UserMixin, db.Model):
     points = db.relationship('Point', backref='user', lazy='dynamic')
     diarys = db.relationship('Diary', backref='user', lazy='dynamic')
     survey = db.relationship('Survey', backref='user', lazy='dynamic')
+    favorites = db.relationship('FavoriteList', backref='user', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

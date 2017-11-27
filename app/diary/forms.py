@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import FileField, SubmitField, IntegerField, StringField, SelectField, TextAreaField, ValidationError
+from wtforms import SubmitField, IntegerField, StringField, TextAreaField, ValidationError, FloatField
 
 
 class ExerciseForm(FlaskForm):
@@ -12,121 +12,23 @@ class ExerciseForm(FlaskForm):
             raise ValidationError('횟수가 0이거나 0보다 작을수 없습니다.')
 
 
-class ExerciseListForm(FlaskForm):
-    text = TextAreaField('즐겨찾기')
+class DietForm(FlaskForm):
+    name = StringField('식사 종류')
+    fullness = IntegerField('배부름 정도 (1~6)')
+    submit = SubmitField('저장하기')
+
+    def validate_fullness(self, field):
+        if field.data <= 0 or field.data > 6:
+            raise ValidationError('배부름 정도는 1에서 6사이로 적어주세요.')
+
+
+class FavoriteListForm(FlaskForm):
+    exercise = TextAreaField('운동 즐겨찾기')
+    diet = TextAreaField('식단 즐겨찾기')
     submit = SubmitField('저장하기')
 
 
-class DiaryForm(FlaskForm):
-    number = IntegerField('운동횟수 1')
-    type = StringField('운동종류 당구')
-    photo = FileField('사진 업로드')
+class WaterSleepForm(FlaskForm):
+    water = FloatField('물')
+    sleep = FloatField('수면')
     submit = SubmitField('저장하기')
-
-
-# class UploadForm(FlaskForm):
-#     file = FileField('이미지', render_kw={'multiple': True})
-
-
-class DiaryFormPhoto(FlaskForm):
-    photo = FileField('사진 업로드')
-    name = StringField('운동이름')
-    kcal = IntegerField('소모 칼로리 kcal')
-    time = IntegerField('Min or hour')
-    submit = SubmitField('저장하기')
-
-
-class FoodForm(FlaskForm):
-    food_type = StringField('음식 종류')
-    kcal = IntegerField('칼로리')
-    submit = SubmitField('저장')
-
-
-class FoodFormPhoto(FlaskForm):
-    food_photo = FileField('사진 업로드')
-
-    food_name = StringField('음식이름')
-    eat = SelectField(label='식사', choices=[('', '아침'),
-                                           ('', '점심'),
-                                           ('', '저녁'),
-                                           ('', '간식')])
-
-    kcal = IntegerField('칼로리')
-    memo = StringField('메모')
-    submit = SubmitField('저장')
-
-
-class WaterForm(FlaskForm):
-    water_type = StringField('물 종류')
-    water_size = IntegerField('물 용량 (ml)')
-    submit = SubmitField('저장')
-
-
-class SleepForm(FlaskForm):
-    sleep = IntegerField('수면시간 0 ~ 12시간')
-    submit = SubmitField('저장')
-
-
-class HealthForm(FlaskForm):
-    pressure_select = SelectField(label='혈압', choices=[('', '수축기'),
-                                                       ('', '이완기')])
-    pressure = StringField('mmHg')
-
-    sugar_select = SelectField(label='혈당', choices=[('', '공복'),
-                                                    ('', '식후2시간')])
-    sugar = StringField('mg/dl')
-
-    mind_select = SelectField(label='심리', choices=[('', '공복'),
-                                                   ('', '식후2시간')])
-    mind = StringField('mg/dl')
-    submit = SubmitField('저장')
-
-
-class EtcForm(FlaskForm):
-    kg = IntegerField('체중 kg')
-    fat = IntegerField('체지방량 kg or %')
-    bone = IntegerField('골격근량 kg')
-    smoke = SelectField(label='흡연', choices=[('', '0갑'),
-                                             ('', '1/2갑'),
-                                             ('', '1갑'),
-                                             ('', '2갑이상')])
-
-    alcohol = SelectField(label='음주', choices=[('', '0병'),
-                                               ('', '1/2병'),
-                                               ('', '1병'),
-                                               ('', '2병이상')])
-
-    bowel = SelectField(label='배변', choices=[('', '못함'),
-                                             ('', '설사'),
-                                             ('', '쾌변')])
-    submit = SubmitField('저장하기')
-
-
-class MyquestionForm(FlaskForm):
-    submit = SubmitField('저장')
-
-
-class MyreviewForm(FlaskForm):
-    review = SelectField(label='태그', choices=[('', '신체정보'),
-                                              ('', '관절기능'),
-                                              ('', '기초체력'),
-                                              ('', '체형분석'),
-                                              ('', '1RM'),
-                                              ('', 'VO2max')])
-    submit = SubmitField('저장')
-
-
-class VideoForm(FlaskForm):
-    submit = SubmitField('올리기')
-
-
-class TagForm(FlaskForm):
-    search = StringField('검색창')
-
-
-class ProfileForm(FlaskForm):
-    my_type = StringField('내 유형')
-    coin = IntegerField('남은 코인')
-    coin_select = SelectField(label='코인 충전하기', choices=[('', 'type1'),
-                                                        ('', 'type2'),
-                                                        ('', 'type3')])

@@ -8,10 +8,10 @@
 
 {% set endpoints = [
     ('diary.manage', '당일 기록 현황'),
-    ('diary.manage_exercise', '운동 기록하기'),
-    ('diary.add_diet', '식단 기록하기'),
-    ('diary.add_sleep', '수면 기록하기'),
-    ('diary.total_list', '전체 일지 열람')
+    ('diary.add_water_sleep', '물 섭취/수면시간 기록하기'),
+    ('diary.add_exercise', '운동 기록하기'),
+    ('diary.add_diet', '식사 기록하기'),
+    ('diary.diary_book', '전체 일지 열람')
 ] %}
 
 {% macro navigation(items) %}
@@ -25,54 +25,41 @@
     </div>
 {% endmacro %}
 
-{% macro checkmark(items) %}
-    {% if items %}
-        <i class="checkmark icon"></i>
-    {% else %}
-        <i class="help icon"></i>
-    {% endif %}
-{% endmacro %}
-
-{% macro diary_info(user) %}
-    <h3>당일 기록 현황</h3>
-    <p>매일 매일 꾸준히 기록해주세요. 놀랍게 변하는 당신을 보시게 될 것입니다.</p>
+{% macro diary_info(user, user_diary) %}
+    {% set water_sleep = user_diary.water_sleeps.first() %}
+    <h2>{{ moment(user_diary.datetime).format('YYYY-MM-DD') }}</h2>
+    <h3>물</h3>
     <table class="ui compact definition table">
         <tr>
-            <td>운동</td>
-            <td>{{ checkmark(user_diary.exercises) }}</td>
-        </tr>
-        <tr>
-            <td>식단</td>
-            <td>{{ checkmark(user_diary.exercises) }}</td>
-        </tr>
-        <tr>
-            <td>수면</td>
-            <td>{{ checkmark(user_diary.exercises) }}</td>
+            <td>물</td>
+            <td>{% if water_sleep %}{{ water_sleep.water }}{% else %}0{% endif %} 잔</td>
         </tr>
     </table>
-{% endmacro %}
-
-{% macro today_exercise(user) %}
-    <h3>오늘 운동 현황</h3>
+    <h3>수면</h3>
     <table class="ui compact definition table">
         <tr>
-            <td>운동명</td>
-            <td>횟수</td>
+            <td>수면</td>
+            <td>{% if water_sleep %}{{ water_sleep.sleep }}{% else %}0{% endif %} 시간</td>
         </tr>
+    </table>
+    <h3>운동</h3>
+    <table class="ui compact definition table">
         {% for e in user_diary.exercises %}
             <tr>
                 <td>{{ e.type }}</td>
-                <td>{{ e.lap }}</td>
+                <td>{{ e.lap }}회</td>
             </tr>
         {% endfor %}
     </table>
-    <div class="row">
-        <a href="{{ url_for('diary.add_exercise') }}">
-            <button class="ui column button">
-                운동 추가
-            </button>
-        </a>
-    </div>
+    <h3>식사</h3>
+    <table class="ui compact definition table">
+        {% for e in user_diary.diets %}
+            <tr>
+                <td>{{ e.type }}</td>
+                <td>{{ e.fullness }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endmacro %}
 
 {% block content %}
@@ -81,18 +68,19 @@
             <h2 class="ui header">
                 운동 일지
             </h2>
+            <p>매일 매일 꾸준히 기록해주세요.놀랍게 변하는 당신을 보시게 될 것입니다.</p>
         </div>
         <div class="stretched divided very relaxed row">
             <div class="four wide column">
                 {{ navigation(endpoints) }}
             </div>
             <div class="eight wide column">
-                {% if request.endpoint == 'diary.manage_exercise' %}
-                    {{ today_exercise(user) }}
-                {% elif form %}
+                {% if form %}
                     {{ f.render_form(form, extra_classes='fluid') }}
                 {% else %}
-                    {{ diary_info(user) }}
+                    {% for user_diary in user_diarys %}
+                        {{ diary_info(user, user_diary) }}
+                    {% endfor %}
                 {% endif %}
             </div>
         </div>

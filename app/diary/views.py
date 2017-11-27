@@ -1,9 +1,10 @@
 from flask import render_template, redirect, url_for, flash
 from flask_login import current_user, login_required
+from sqlalchemy import desc
 
 from app import db
-from ..models import get_diary_today, Exercise, FavoriteExercise
-from .forms import ExerciseForm, ExerciseListForm
+from ..models import get_diary_today, Exercise, FavoriteList, Diet, WaterSleep, Diary
+from .forms import ExerciseForm, FavoriteListForm, DietForm, WaterSleepForm
 from . import diary
 
 
@@ -13,15 +14,30 @@ from . import diary
 def manage():
     """Display a user's diary information."""
     user_diary = get_diary_today(current_user)
-    return render_template('diary/manage.html', form=None, user_diary=user_diary)
+    return render_template('diary/manage.html', form=None, user_diarys=[user_diary])
 
 
-@diary.route('/exercise')
-@diary.route('/manage/exercise')
+@diary.route('/add/water-sleep', methods=['GET', 'POST'])
 @login_required
-def manage_exercise():
+def add_water_sleep():
+    form = WaterSleepForm()
     user_diary = get_diary_today(current_user)
-    return render_template('diary/manage.html', user_diary=user_diary)
+    water_sleep = user_diary.water_sleeps.first()
+    if water_sleep is None:
+        water_sleep = WaterSleep()
+        user_diary.water_sleeps.append(water_sleep)
+        db.session.add(user_diary)
+        db.session.commit()
+    if form.validate_on_submit():
+        water_sleep.sleep = form.sleep.data
+        water_sleep.water = form.water.data
+        user_diary.water_sleeps.append(water_sleep)
+        db.session.add(user_diary)
+        db.session.commit()
+        return redirect(url_for('diary.manage'))
+    form.sleep.data = water_sleep.sleep
+    form.water.data = water_sleep.water
+    return render_template('diary/manage.html', form=form)
 
 
 @diary.route('/add/exercise', methods=['GET', 'POST'])
@@ -34,212 +50,56 @@ def add_exercise():
         user_diary.exercises.append(exercise)
         db.session.add(user_diary)
         db.session.commit()
-        return redirect(url_for('diary.manage_exercise'))
-    exercises = FavoriteExercise.query.filter_by(user_id=current_user.id).first()
+        return redirect(url_for('diary.manage'))
+    exercises = FavoriteList.query.filter_by(user_id=current_user.id).first()
     if exercises is None:
-        exercises = FavoriteExercise(user_id=current_user.id)
+        exercises = FavoriteList(user_id=current_user.id)
         db.session.add(exercises)
         db.session.commit()
-    return render_template('diary/add_exercise.html', form=form, items=exercises.text.split(','))
+    return render_template('diary/add_exercise.html', form=form, items=exercises.exercise.split(','))
 
 
-@diary.route('/manage/exercise-list', methods=['GET', 'POST'])
-@login_required
-def manage_exercise_list():
-    form = ExerciseListForm()
-    exercises = FavoriteExercise.query.filter_by(user_id=current_user.id).first()
-    if form.validate_on_submit():
-        exercises.text = form.text.data.strip().replace(' ', '', 20)
-        db.session.add(exercises)
-        db.session.commit()
-        flash('운동 즐겨찾기가 새로 저장되었습니다.', 'form-success')
-        return redirect(url_for('diary.add_exercise'))
-    form.text.data = exercises.text
-    return render_template('diary/manage_exercise_list.html', form=form)
-
-
-@diary.route('/add/diet')
+@diary.route('/add/diet', methods=['GET', 'POST'])
 @login_required
 def add_diet():
-    return render_template('diary/manage.html', form=None)
+    form = DietForm()
+    if form.validate_on_submit():
+        diet = Diet(type=form.name.data, fullness=form.fullness.data)
+        user_diary = get_diary_today(current_user)
+        user_diary.diets.append(diet)
+        db.session.add(user_diary)
+        db.session.commit()
+        return redirect(url_for('diary.manage'))
+    lists = FavoriteList.query.filter_by(user_id=current_user.id).first()
+    if lists is None:
+        lists = FavoriteList(user_id=current_user.id)
+        db.session.add(lists)
+        db.session.commit()
+    return render_template('diary/add_diet.html', form=form, items=lists.diet.split(','))
 
 
-@diary.route('/add/sleep')
+@diary.route('/manage/favorite-list/<int:type_num>', methods=['GET', 'POST'])
 @login_required
-def add_sleep():
-    return render_template('diary/manage.html', form=None)
+def manage_favorite_list(type_num):
+    form = FavoriteListForm()
+    lists = FavoriteList.query.filter_by(user_id=current_user.id).first()
+    if form.validate_on_submit():
+        lists.exercise = form.exercise.data.strip().replace(' ', '', 20)
+        lists.diet = form.diet.data.strip().replace(' ', '', 20)
+        db.session.add(lists)
+        db.session.commit()
+        flash('즐겨찾기가 새로 저장되었습니다.', 'form-success')
+        if type_num == 0:
+            return redirect(url_for('diary.add_exercise'))
+        else:
+            return redirect(url_for('diary.add_diet'))
+    form.exercise.data = lists.exercise
+    form.diet.data = lists.diet
+    return render_template('diary/favorite_list.html', form=form)
 
 
 @diary.route('/diary-book')
 @login_required
-def total_list():
-    return render_template('diary/manage.html', form=None)
-
-# @diary.route('/', methods=['GET', 'POST'])
-# def diary_view():
-#     """운동일지 첫 시작화면"""
-#     form = DiaryForm()
-#     if form.validate_on_submit():
-#         num = form.number.data
-#         types = form.type.data
-#         # basedirs = os.path.join(basedir.static)
-#         # print(basedirs)
-#         print(num)
-#         print(types)
-#
-#         # f = form.photo.data
-#         # filename = secure_filename(f.filename)
-#         # f.save(os.path.join(
-#         #     diary.instance_path, 'photos', filename
-#         # ))
-#
-#     return render_template('diary/diary_page.html', form=form)
-
-
-# @diary.route('/photo', methods=['GET', 'POST'])
-# def diary_view_photo():
-#     """운동일지 두번째 화면"""
-#     # image = None
-#     # form = DiaryFormPhoto()
-#     form = DiaryFormPhoto()
-#     # form_photo = UploadForm()
-#     if form.validate_on_submit():
-#         # image = 'uploads/' + form_photo.image_file.data.filename
-#         # form_photo.image_file.data.save(os.path.join('static', image))
-#
-#         names = form.name.data
-#         kcals = form.kcal.data
-#         times = form.time.datas
-#         # print(form_photo.image_file.data.save)
-#         # print(basedir)
-#         print(names)
-#         print(kcals)
-#         print(times)
-#
-#     return render_template('diary/main_page.html', form=form)
-#
-#
-# @diary.route('/gif', methods=['GET', 'POST'])
-# def diary_view_gif():
-#     """운동일지 gif 화면"""
-#     form = FitForm()
-#     if form.validate_on_submit():
-#         memos = form.memo.data
-#         print(memos)
-#
-#     return render_template('diary/fit_page.html', form=form)
-#
-#
-# @diary.route('/food', methods=['GET', 'POST'])
-# def diary_view_food():
-#     """식단일지 food_page"""
-#     form = FoodForm()
-#     if form.validate_on_submit():
-#         food_types = form.food_type.data
-#         kcal = form.kcal.data
-#         print(food_types)
-#         print(kcal)
-#
-#     return render_template('diary/food_page.html', form=form)
-#
-#
-# @diary.route('/food_photo', methods=['GET', 'POST'])
-# def diary_view_food_photo():
-#     """식단일지 사진등록 페이지"""
-#     form = FoodFormPhoto()
-#     if form.validate_on_submit():
-#         food_names = form.food_name.data
-#         kcals = form.kcal.data
-#         print(food_names)
-#         print(kcals)
-#
-#     return render_template('diary/food_diary_page.html', form=form)
-#
-#
-# @diary.route('/water', methods=['GET', 'POST'])
-# def diary_view_water():
-#     """물일지 페이지"""
-#     form = WaterForm()
-#     if form.validate_on_submit():
-#         water_types = form.water_type.data
-#         water_sizes = form.water_size.data
-#         print(water_sizes)
-#         print(water_types)
-#
-#     return render_template('diary/water_page.html', form=form)
-#
-#
-# @diary.route('/sleep', methods=['GET', 'POST'])
-# def diary_view_sleep():
-#     """수면 일지 페이지"""
-#     form = SleepForm()
-#     if form.validate_on_submit():
-#         sleeps = form.sleep.data
-#         print(sleeps)
-#
-#     return render_template('diary/sleep_page.html', form=form)
-#
-#
-# @diary.route('/health', methods=['GET', 'POST'])
-# def diary_view_health():
-#     """건강일지 혈압, 혈당, 심리 페이지"""
-#     form = HealthForm()
-#     if form.validate_on_submit():
-#         pressures = form.pressure.data
-#         print(pressures)
-#
-#     return render_template('diary/health_page.html', form=form)
-#
-#
-# @diary.route('/etc', methods=['GET', 'POST'])
-# def diary_view_etc():
-#     """ETC 기타일지 페이지"""
-#     form = EtcForm()
-#     if form.validate_on_submit():
-#         kgs = form.kg.data
-#         fats = form.fat.data
-#         bones = form.bone.data
-#         smokes = form.smoke.data
-#         alcohols = form.alcohol.data
-#         bowels = form.bowel.data
-#         print(kgs)
-#         print(fats)
-#         print(bones)
-#         print(smokes)
-#         print(alcohols)
-#         print(bowels)
-#
-#     return render_template('diary/etc_page.html', form=form)
-#
-#
-# @diary.route('/myquestion', methods=['GET', 'POST'])
-# def diary_view_myquestion():
-#     form = MyquestionForm()
-#     # if form.validate_on_submit():
-#     return render_template('diary/myquestion_page.html', form=form)
-#
-#
-# @diary.route('/myreview', methods=['GET', 'POST'])
-# def diary_view_myreview():
-#     form = MyreviewForm()
-#     return render_template('diary/myreview_page.html', form=form)
-#
-#
-# @diary.route('/tag', methods=['GET', 'POST'])
-# def diary_view_tag():
-#     form = TagForm()
-#     return render_template('diary/tag_page.html', form=form)
-#
-#
-# @diary.route('/profile', methods=['GET', 'POST'])
-# def diary_view_profile():
-#     form = ProfileForm()
-#     return render_template('diary/profile.html', form=form)
-
-
-# @diary.route('/upload', methods=['GET', 'POST'])
-# def diary_upload():
-#     if request.method == 'POST' and 'photo' in request.files:
-#         filename = photos.save(request.files['photo'])
-#         return filename
-#     return render_template('diary/upload.html')
+def diary_book():
+    user_diarys = Diary.query.filter_by(user_id=current_user.id).order_by(desc(Diary.datetime)).all()
+    return render_template('diary/manage.html', form=None, user_diarys=user_diarys)
