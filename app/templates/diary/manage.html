@@ -1,0 +1,100 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
+
+{% block custom_head_tags %}
+    {{ moment.include_moment() }}
+{% endblock %}
+
+{% set endpoints = [
+    ('diary.manage', '당일 기록 현황'),
+    ('diary.manage_exercise', '운동 기록하기'),
+    ('diary.add_diet', '식단 기록하기'),
+    ('diary.add_sleep', '수면 기록하기'),
+    ('diary.total_list', '전체 일지 열람')
+] %}
+
+{% macro navigation(items) %}
+    <div class="ui vertical fluid secondary menu">
+        {% for route, name in items %}
+            {% set href = url_for(route) %}
+            <a class="item {% if request.endpoint == route %}active{% endif %}" href="{{ href }}">
+                {{ name }}
+            </a>
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro checkmark(items) %}
+    {% if items %}
+        <i class="checkmark icon"></i>
+    {% else %}
+        <i class="help icon"></i>
+    {% endif %}
+{% endmacro %}
+
+{% macro diary_info(user) %}
+    <h3>당일 기록 현황</h3>
+    <p>매일 매일 꾸준히 기록해주세요. 놀랍게 변하는 당신을 보시게 될 것입니다.</p>
+    <table class="ui compact definition table">
+        <tr>
+            <td>운동</td>
+            <td>{{ checkmark(user_diary.exercises) }}</td>
+        </tr>
+        <tr>
+            <td>식단</td>
+            <td>{{ checkmark(user_diary.exercises) }}</td>
+        </tr>
+        <tr>
+            <td>수면</td>
+            <td>{{ checkmark(user_diary.exercises) }}</td>
+        </tr>
+    </table>
+{% endmacro %}
+
+{% macro today_exercise(user) %}
+    <h3>오늘 운동 현황</h3>
+    <table class="ui compact definition table">
+        <tr>
+            <td>운동명</td>
+            <td>횟수</td>
+        </tr>
+        {% for e in user_diary.exercises %}
+            <tr>
+                <td>{{ e.type }}</td>
+                <td>{{ e.lap }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <div class="row">
+        <a href="{{ url_for('diary.add_exercise') }}">
+            <button class="ui column button">
+                운동 추가
+            </button>
+        </a>
+    </div>
+{% endmacro %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <h2 class="ui header">
+                운동 일지
+            </h2>
+        </div>
+        <div class="stretched divided very relaxed row">
+            <div class="four wide column">
+                {{ navigation(endpoints) }}
+            </div>
+            <div class="eight wide column">
+                {% if request.endpoint == 'diary.manage_exercise' %}
+                    {{ today_exercise(user) }}
+                {% elif form %}
+                    {{ f.render_form(form, extra_classes='fluid') }}
+                {% else %}
+                    {{ diary_info(user) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

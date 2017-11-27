@@ -73,7 +73,11 @@ def logout():
 def manage():
     """Display a user's account information."""
     survey = Survey.query.filter_by(user_id=current_user.id).order_by(desc(Survey.datetime)).first()
-    return render_template('account/manage.html', user=current_user, form=None, result=find_pattern(survey.code))
+    if survey is not None:
+        result = find_pattern(survey.code)
+    else:
+        result = '설문조사를 진행해주세요.'
+    return render_template('account/manage.html', user=current_user, form=None, result=result)
 
 
 @account.route('/manage/point')

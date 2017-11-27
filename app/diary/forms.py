@@ -1,5 +1,20 @@
 from flask_wtf import FlaskForm
-from wtforms import FileField, SubmitField, IntegerField, StringField, SelectField
+from wtforms import FileField, SubmitField, IntegerField, StringField, SelectField, TextAreaField, ValidationError
+
+
+class ExerciseForm(FlaskForm):
+    name = StringField('운동명')
+    laps = IntegerField('횟수')
+    submit = SubmitField('저장하기')
+
+    def validate_laps(self, field):
+        if field.data <= 0:
+            raise ValidationError('횟수가 0이거나 0보다 작을수 없습니다.')
+
+
+class ExerciseListForm(FlaskForm):
+    text = TextAreaField('즐겨찾기')
+    submit = SubmitField('저장하기')
 
 
 class DiaryForm(FlaskForm):
@@ -19,10 +34,6 @@ class DiaryFormPhoto(FlaskForm):
     kcal = IntegerField('소모 칼로리 kcal')
     time = IntegerField('Min or hour')
     submit = SubmitField('저장하기')
-
-
-class FitForm(FlaskForm):
-    memo = StringField('오늘 피드백 받은 내용 메모')
 
 
 class FoodForm(FlaskForm):

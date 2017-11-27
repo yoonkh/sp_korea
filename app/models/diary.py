@@ -8,7 +8,7 @@ class Diary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     datetime = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
+    exercises = db.relationship('Exercise', backref='diary', lazy='dynamic')
     food_id = db.Column(db.Integer, db.ForeignKey('foods.id'))
     water_id = db.Column(db.Integer, db.ForeignKey('waters.id'))
     sleep_id = db.Column(db.Integer, db.ForeignKey('sleeps.id'))
@@ -16,12 +16,36 @@ class Diary(db.Model):
     etc_id = db.Column(db.Integer, db.ForeignKey('etcs.id'))
 
 
+def get_diary_today(user):
+    current_date = get_current_date_utc()
+    diary = Diary.query.filter(Diary.datetime >= current_date).filter_by(user_id=user.id).first()
+    if diary is None:
+        diary = Diary(user_id=user.id)
+    return diary
+
+
+def get_current_date_utc():
+    import datetime as d
+    current_date = datetime.utcnow()
+    if current_date.hour < 9:
+        current_date -= d.timedelta(days=1)
+    current_date.replace(hour=9, minute=0, second=0, microsecond=0)
+    return current_date
+
+
 class Exercise(db.Model):
     __tablename__ = 'exercises'
     id = db.Column(db.Integer, primary_key=True)
-    exe_type = db.Column(db.String(10))  # 운동종류
-    rep = db.Column(db.String(10))  # 횟수
-    diary_id = db.relationship('Diary', backref='exercise', lazy='dynamic')
+    type = db.Column(db.String(32))  # 운동종류
+    lap = db.Column(db.Integer())  # 횟수
+    diary_id = db.Column(db.Integer, db.ForeignKey('diarys.id'))
+
+
+class FavoriteExercise(db.Model):
+    __tablename__ = 'favorite_exercises'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    text = db.Column(db.Text, default="팔굽혀펴기,턱걸이,크런치")
 
 
 class Food(db.Model):

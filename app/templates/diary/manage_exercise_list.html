@@ -1,0 +1,12 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <h3>즐겨찾기 운동 관리</h3>
+            <p>쉼표로 구분해서 입력해주시면 자동으로 구분하여 인식합니다.</p>
+            {{ f.render_form(form, extra_classes='fluid') }}
+        </div>
+    </div>
+{% endblock %}

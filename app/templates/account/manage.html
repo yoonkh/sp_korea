@@ -2,6 +2,10 @@
 {% import 'macros/form_macros.html' as f %}
 {% import 'macros/check_password.html' as check %}
 
+{% block custom_head_tags %}
+    {{ moment.include_moment() }}
+{% endblock %}
+
 {% set endpoints = [
     ('account.manage', '계정 정보'),
     ('account.manage_point', '포인트 충전'),
@@ -74,13 +78,13 @@
         </a>
     </div>
 
-    <h3>포인트 사용 내역</h3>
+    <h3>포인트 충전 및 사용 내역</h3>
     {% set points=user.get_points_list() %}
-    {% if points|count > 1 %}
+    {% if points|count >= 1 %}
         <table class="ui compact definition table">
             {% for point in points %}
                 <tr>
-                    <td>{{ point.datetime }}</td>
+                    <td>{{ moment(point.datetime).format('YYYY-MM-DD, h:mm a') }}</td>
                     <td>{{ point.amount }}</td>
                 </tr>
             {% endfor %}
