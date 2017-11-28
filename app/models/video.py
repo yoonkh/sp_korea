@@ -17,8 +17,8 @@ class Video(db.Model):
     company = db.Column(db.String(32))
     description = db.Column(db.Text())
     link = db.Column(db.String())
-    tags = db.relationship('VideoTag', secondary=tags, lazy='dynamic',
-                           backref=db.backref('videos', lazy='joined'))
+    tags = db.relationship('VideoTag', secondary=tags, lazy='select',
+                           backref=db.backref('videos', lazy='True'))
 
     def set_tags(self, tags_list):
         """기존의 태그와 비교하여 기존 테그에 추가 및 삭제"""
