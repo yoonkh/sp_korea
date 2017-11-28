@@ -112,7 +112,7 @@ config = {
     'heroku': HerokuConfig,
     'unix': UnixConfig,
 
-    'default': HerokuConfig
+    'default': DevelopmentConfig
 }
 
 
