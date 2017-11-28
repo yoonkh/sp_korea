@@ -7,7 +7,7 @@
     <h1>맞춤형 영상 추천</h1>
 </div>
 <div class="ui container" style="margin-top: 20px;">
-    <table class="ui celled table">
+    <table class="ui selectable celled table">
         <thead>
         <tr>
             <th>이름</th>
@@ -21,7 +21,7 @@
         {% for video in videos %}
             <tr onclick="window.location.href = '{{ url_for('video.video_info', video_id=video.id) }}';">
                 <td>{{ video.name }}</td>
-                <td>{{ video.running_time.minute }}:{{ video.running_time.second }}</td>
+                <td>{{ v.running_time.strftime('%M:%S') }}</td>
                 <td>{{ video.price }}</td>
                 <td>{{ video.tags }}</td>
                 <td>{{ video.company }}</td>

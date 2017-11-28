@@ -5,17 +5,16 @@
     <div class="ui text container">
 
         <div class="ui padded raised segment">
-            <h3>You need to confirm your account before continuing.</h3>
+            <h3>로그인 하기 전에 계정을 확인하셔야 합니다.</h3>
 
-            <p>When you created an account, you should have received an email from us at {{ current_user.email }}
-            with a link to confirm your email address.</p>
+            <p>계정을 생성하신후 , {{ current_user.email }}으로 계정 확인 링크가 전송되었습니다.</p>
 
             <div class="ui divider"></div>
 
-            <h3>I didn't receive an email!</h3>
+            <h3>확인 메일을 받지 못했습니다!</h3>
 
-            <p>No problem! Just click the button below and we'll send you another one.</p>
-            <a class="ui small button" href="{{ url_for('account.confirm_request') }}">Resend confirmation email</a>
+            <p>문제 없습니다! 아래 링크를 클릭하시면 새로운 확인 메일을 받으실수 있습니다.</p>
+            <a class="ui small button" href="{{ url_for('account.confirm_request') }}">확인 메일 재 전송</a>
         </div>
     </div>
 {% endblock %}
