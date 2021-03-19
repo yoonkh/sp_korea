@@ -25,7 +25,7 @@ honcho==1.0.1
 iamport-rest-client==0.6.0
 idna==2.6
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.11.3
 jsmin==2.2.2
 jsonpickle==0.9.5
 Mako==1.0.7
